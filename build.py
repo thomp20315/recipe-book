@@ -27,6 +27,6 @@ main:has(.recipe:target) .grid{display:none}.hero{width:100%;max-height:420px;ob
 .cols{display:grid;grid-template-columns:1fr 1.6fr;gap:2rem}h4{color:#b5542d;border-bottom:2px solid #f3e3cf;padding-bottom:.3rem}
 li{margin:.45rem 0;line-height:1.5}.src a{color:#b5542d}@media(max-width:700px){.cols{grid-template-columns:1fr}header h1{font-size:1.7rem}}'''
 open('index.html', 'w').write(f'''<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Our Recipe Book</title><style>{css}</style></head><body><header><h1>Our Recipe Book</h1><p>John &amp; family's favorites</p></header>
+<title>Thompson Recipe Book</title><style>{css}</style></head><body><header><h1>Thompson Recipe Book</h1><p>John &amp; family's favorites</p></header>
 <main><div class="grid">{cards}</div>{pages}</main></body></html>''')
 print(f'Built index.html with {len(R)} recipe(s)')
