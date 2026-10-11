@@ -1,5 +1,10 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Thompson Recipe Book</title><style>body{margin:0;font-family:Georgia,serif;background:#fbf5ec;color:#3b2a1e}header{background:#b5542d;color:#fff8ef;text-align:center;padding:2rem 1rem}
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#b5542d"><link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Recipes"><link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<title>Thompson Recipe Book</title><style>body{margin:0;font-family:Georgia,serif;background:#fbf5ec;color:#3b2a1e}header{background:#b5542d;color:#fff8ef;text-align:center;padding:calc(2rem + env(safe-area-inset-top)) calc(1rem + env(safe-area-inset-right)) 2rem calc(1rem + env(safe-area-inset-left))}main{padding-left:calc(1.5rem + env(safe-area-inset-left))!important;padding-right:calc(1.5rem + env(safe-area-inset-right))!important;padding-bottom:calc(1.5rem + env(safe-area-inset-bottom))!important}
 header h1{margin:0;font-size:2.2rem}header p{margin:.3rem 0 0;opacity:.85}main{max-width:1000px;margin:auto;padding:1.5rem}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.2rem}.card{background:#fff;border-radius:14px;overflow:hidden;
 box-shadow:0 3px 12px #0002;text-decoration:none;color:inherit;transition:transform .15s}.card:hover{transform:translateY(-4px)}
@@ -23,4 +28,7 @@ li{margin:.45rem 0;line-height:1.5}.src a{color:#b5542d}@media(max-width:700px){
 <img class="hero" src="images/baby-back-ribs.jpg" alt=""><h2>Baby Back Ribs</h2><p class="desc">Recipe courtesy of Sandra Lee (Semi-Homemade Cooking, episode: Weekend Gathering). Level: Easy.</p>
 <div class="meta"><span><b>Serves</b> 4</span><span><b>Prep</b> 5 min</span><span><b>Cook</b> 1 hr 8 min</span><span><b>Total</b> 1 hr 13 min</span></div><div class="cols"><div><h4>Ingredients</h4><ul><li>2 full racks (quartered) baby back ribs</li><li>1-quart beef broth</li><li>2 cups barbeque sauce (recommended: Bullseye Original Barbeque Sauce)</li><li>1 cup honey</li></ul></div>
 <div><h4>Steps</h4><ol><li>Place ribs and beef broth in a large heavy pot or Dutch oven, and add enough water to fully cover ribs. Simmer over low heat for about 1 hour. Once tender, remove and set aside.</li><li>Preheat the grill to medium heat. In a medium bowl, combine barbeque sauce and honey. Baste ribs generously with sauce and grill for about 4 minutes on each side or until desired degree of doneness.</li></ol></div></div>
-<p class="src">Source: <a href="https://www.foodnetwork.com/recipes/sandra-lee/baby-back-ribs-recipe-1951610" target="_blank" rel="noopener">Food Network (Sandra Lee)</a></p></section></main></body></html>
+<p class="src">Source: <a href="https://www.foodnetwork.com/recipes/sandra-lee/baby-back-ribs-recipe-1951610" target="_blank" rel="noopener">Food Network (Sandra Lee)</a></p></section></main><script>
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');
+window.addEventListener('hashchange',function(){window.scrollTo(0,0)});
+</script></body></html>
