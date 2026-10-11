@@ -123,8 +123,8 @@ var items=[],$=function(i){return document.getElementById(i)};
 function esc(s){var d=document.createElement('div');d.textContent=s==null?'':String(s);return d.innerHTML;}
 function safeUrl(u){return /^https?:\\/\\//i.test(u||'')?u:null;}
 function toast(t){var el=$('toast');el.textContent=t;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(function(){el.classList.remove('show')},2200);}
-function load(){return SB('cart_items?select=*&order=sort_order.asc,created_at.asc').then(function(x){items=x;render();}).catch(function(){});}
-function act(p,okMsg){$('cstat').textContent='Saving\\u2026';return p.then(function(r){$('cstat').textContent='';if(okMsg)toast(okMsg);return load().then(function(){return r});})
+var seq=0;function load(){var my=++seq;return SB('cart_items?select=*&order=sort_order.asc,created_at.asc').then(function(x){if(my===seq){items=x;render();}}).catch(function(){});}
+function act(p,okMsg){$('cstat').textContent='Saving\\u2026';return p.then(function(r){return load().then(function(){$('cstat').textContent='';if(okMsg)toast(okMsg);return r});})
 .catch(function(){$('cstat').textContent='Couldn\\u2019t save \\u2014 check your connection and try again.';toast('Couldn\\u2019t save \\u2014 try again');load();});}
 function render(){var n=items.filter(function(i){return !i.checked}).length,c=$('cartCnt');c.textContent=n>99?'99+':n;c.hidden=!n;
 var L=$('cartList');if(!items.length){L.innerHTML='<p class="empty">Your cart is empty. Add a recipe\\u2019s ingredients from its page, or add an item above.</p>';return;}
