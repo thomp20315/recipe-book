@@ -35,8 +35,8 @@ open('index.html', 'w').write(f'''<!doctype html><html><head><meta charset="utf-
 <meta name="theme-color" content="#b5542d"><link rel="manifest" href="manifest.webmanifest">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Recipes"><link rel="apple-touch-icon" href="icons/icon-180.png">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-title" content="Recipes"><link rel="apple-touch-icon" href="icons/dog-icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/dog-icon-192.png">
 <title>Thompson Recipe Book</title><style>{css}</style></head><body><header><h1>Thompson Recipe Book</h1></header>
 <main><div class="grid">{cards}</div>{pages}</main><script>
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');
@@ -56,13 +56,13 @@ def draw_icon(size, maskable=False):
     inner = int(size*0.8); out.paste(src.resize((inner, inner), Image.LANCZOS), ((size-inner)//2,)*2); return out
 
 os.makedirs("icons", exist_ok=True)
-for s in (180, 192, 512): draw_icon(s).save(f"icons/icon-{s}.png")
-for s in (192, 512): draw_icon(s, True).save(f"icons/icon-maskable-{s}.png")
+for s in (180, 192, 512): draw_icon(s).save(f"icons/dog-icon-{s}.png")
+for s in (192, 512): draw_icon(s, True).save(f"icons/dog-icon-maskable-{s}.png")
 json.dump({"name": "Thompson Recipe Book", "short_name": "Recipes", "description": "John & family's favorite recipes",
   "id": "/recipe-book/", "start_url": "/recipe-book/", "scope": "/recipe-book/", "display": "standalone",
   "theme_color": "#b5542d", "background_color": "#fbf5ec",
-  "icons": [{"src": f"icons/icon-{s}.png", "sizes": f"{s}x{s}", "type": "image/png", "purpose": "any"} for s in (192, 512)] +
-           [{"src": f"icons/icon-maskable-{s}.png", "sizes": f"{s}x{s}", "type": "image/png", "purpose": "maskable"} for s in (192, 512)]},
+  "icons": [{"src": f"icons/dog-icon-{s}.png", "sizes": f"{s}x{s}", "type": "image/png", "purpose": "any"} for s in (192, 512)] +
+           [{"src": f"icons/dog-icon-maskable-{s}.png", "sizes": f"{s}x{s}", "type": "image/png", "purpose": "maskable"} for s in (192, 512)]},
   open("manifest.webmanifest", "w"), indent=2)
 assets = ["./", "recipes.json", "manifest.webmanifest"] + [f"icons/{f}" for f in sorted(os.listdir("icons"))] + [r["image"] for r in R if r.get("image")]
 ver = hashlib.sha1(open("index.html", "rb").read() + json.dumps(assets).encode()).hexdigest()[:10]
