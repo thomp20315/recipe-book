@@ -85,7 +85,8 @@ background:#b5542d;color:#fff8ef;border:0;border-radius:30px;padding:.9rem 1.3re
 .row{display:flex;gap:.5rem}.sheet input,.sheet textarea{flex:1;width:100%;box-sizing:border-box;font:16px Georgia,serif;padding:.7rem;border:1.5px solid #e2c9ad;border-radius:10px;background:#fff;color:#3b2a1e}
 .sheet textarea{min-height:70px;resize:vertical}.btn{border:0;border-radius:10px;padding:.7rem 1rem;font:600 1rem Georgia,serif;cursor:pointer}
 .btn.alt{background:#f3e3cf;color:#8a3a1c}.btn.go{background:#b5542d;color:#fff8ef;width:100%;margin-top:1rem}
-.err{color:#b3261e;font-size:.85rem;min-height:1.1em;margin:.3rem 0 0}.x{float:right;background:none;border:0;font-size:1.5rem;color:#8a3a1c;cursor:pointer;line-height:1}"""
+.err{color:#b3261e;font-size:.85rem;min-height:1.1em;margin:.3rem 0 0}.who-pick{display:flex;gap:.5rem}.who-pick button{flex:1;border:1.5px solid #e2c9ad;background:#fff;color:#6b4a35;border-radius:20px;padding:.5rem;font:600 .95rem Georgia,serif;cursor:pointer}.who-pick button.on{background:#b5542d;border-color:#b5542d;color:#fff8ef}.ok{background:#e6f2df;color:#2f6b2a;border-radius:10px;padding:.6rem .8rem;margin:.8rem 0 0;font-weight:600}.ok[hidden]{display:none}.btn.go:disabled{opacity:.7}.x{float:right;background:none;border:0;font-size:1.5rem;color:#8a3a1c;cursor:pointer;line-height:1}"""
+QUEUE_URL = "https://api.restful-api.dev/objects/ff808181a09d98f701a12cce0b7140bb"  # pending-recipes queue
 ADD_HTML = """<button class="fab" id="addBtn" type="button" aria-haspopup="dialog">&#xFF0B; Add Recipe</button>
 <div class="sheet-bg" id="sheetBg"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
 <button class="x" id="closeSheet" type="button" aria-label="Close">&times;</button><h3 id="sheetTitle">Add a recipe</h3>
@@ -93,27 +94,37 @@ ADD_HTML = """<button class="fab" id="addBtn" type="button" aria-haspopup="dialo
 <input id="recLink" type="url" autofocus inputmode="url" autocomplete="off" autocapitalize="off" placeholder="https://..." required>
 <button class="btn alt" id="pasteBtn" type="button">Paste</button></div><p class="err" id="err"></p>
 <label for="recNotes">Notes (optional)</label><textarea id="recNotes" placeholder="Anything to remember?"></textarea>
-<button class="btn go" type="submit">Send</button></form></div></div>
+<label>Added by (optional)</label><div class="who-pick" id="whoPick"><button type="button" data-w="Mom">Mom</button><button type="button" data-w="Dad">Dad</button><button type="button" data-w="Kids">Kids</button></div>
+<p class="ok" id="okMsg" hidden></p>
+<button class="btn go" id="sendBtn" type="submit">Send</button></form></div></div>
 <script>
 (function(){
-var TO='thompkitchen@mail.grokbot.com',bg=document.getElementById('sheetBg'),link=document.getElementById('recLink'),
-notes=document.getElementById('recNotes'),err=document.getElementById('err'),paste=document.getElementById('pasteBtn');
-function open(){err.textContent='';bg.classList.add('open');link.focus();}
+var QURL=""" + json.dumps(QUEUE_URL) + """,bg=document.getElementById('sheetBg'),link=document.getElementById('recLink'),
+notes=document.getElementById('recNotes'),err=document.getElementById('err'),paste=document.getElementById('pasteBtn'),
+ok=document.getElementById('okMsg'),send=document.getElementById('sendBtn'),pick=document.getElementById('whoPick'),busy=false;
+var who='';try{who=localStorage.getItem('rb-addedBy')||''}catch(_){}
+function showWho(){pick.querySelectorAll('button').forEach(function(b){b.classList.toggle('on',b.dataset.w===who)});}
+pick.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;who=(who===b.dataset.w)?'':b.dataset.w;try{localStorage.setItem('rb-addedBy',who)}catch(_){}showWho();});showWho();
+function open(){err.textContent='';ok.hidden=true;send.textContent='Send';bg.classList.add('open');link.focus();}
 function close(){bg.classList.remove('open');}
 document.getElementById('addBtn').addEventListener('click',open);
 document.getElementById('closeSheet').addEventListener('click',close);
-bg.addEventListener('click',function(e){if(e.target===bg)close();});
-document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+bg.addEventListener('click',function(e){if(e.target===bg&&!busy)close();});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!busy)close();});
 if(!(navigator.clipboard&&navigator.clipboard.readText))paste.style.display='none';
 paste.addEventListener('click',function(){navigator.clipboard.readText().then(function(t){link.value=t.trim();err.textContent='';link.focus();})
 .catch(function(){err.textContent='Clipboard not allowed here. Long-press the field and choose Paste.';link.focus();});});
-document.getElementById('addForm').addEventListener('submit',function(e){e.preventDefault();var u=link.value.trim();
+document.getElementById('addForm').addEventListener('submit',function(e){e.preventDefault();if(busy)return;var u=link.value.trim();err.textContent='';
 if(!u){err.textContent='Please paste a recipe link.';link.focus();return;}
 if(!/^https?:\\/\\//i.test(u)){err.textContent='The link should start with http:// or https://';link.focus();return;}
-var body='Recipe link: '+u+(notes.value.trim()?'\\n\\nNotes: '+notes.value.trim():'');
-var href='mailto:'+TO+'?subject='+encodeURIComponent('Recipe: '+u)+'&body='+encodeURIComponent(body).replace(/%0A/g,'%0D%0A');
-var a=document.createElement('a');a.href=href;a.style.display='none';document.body.appendChild(a);a.click();a.remove();
-link.value='';notes.value='';close();});
+var item={url:u,notes:notes.value.trim(),ts:Date.now()};if(who)item.addedBy=who;
+busy=true;send.disabled=true;send.textContent='Adding\\u2026';
+fetch(QURL+'?t='+Date.now(),{cache:'no-store'}).then(function(r){if(!r.ok)throw r.status;return r.json()}).then(function(j){
+var p=(j.data&&Array.isArray(j.data.pending))?j.data.pending:[];p.push(item);
+return fetch(QURL,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:'thompson-recipe-book-queue',data:{pending:p}})});})
+.then(function(r){if(!r.ok)throw r.status;ok.textContent='Added! \\u2713 It\\u2019ll appear in the book shortly';ok.hidden=false;send.textContent='Added \\u2713';
+link.value='';notes.value='';setTimeout(function(){busy=false;send.disabled=false;close();},1800);})
+.catch(function(){busy=false;send.disabled=false;send.textContent='Retry';err.textContent='Couldn\\u2019t save \\u2014 check your connection and tap Retry.';});});
 })();
 </script>"""
 open('index.html', 'w').write(f'''<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
