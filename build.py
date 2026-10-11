@@ -49,19 +49,12 @@ import os, hashlib
 from PIL import Image, ImageDraw
 TERRA, CREAM, TAN, LINE = (181, 84, 45), (251, 245, 236), (240, 214, 184), (214, 160, 120)
 def draw_icon(size, maskable=False):
-    S = 1024; im = Image.new("RGB", (S, S), TERRA); d = ImageDraw.Draw(im)
-    k = 0.72 if maskable else 0.92  # maskable keeps art inside the safe zone
-    P = lambda x, y: (S/2 + (x - S/2)*k, S/2 + (y - S/2)*k)
-    d.polygon([P(150,790),P(512,850),P(874,790),P(874,760),P(512,815),P(150,760)], fill=TAN)
-    d.polygon([P(170,330),P(500,380),P(500,800),P(170,750)], fill=CREAM)
-    d.polygon([P(854,330),P(524,380),P(524,800),P(854,750)], fill=CREAM)
-    for i in range(5):
-        y = 440 + i*62
-        d.line([P(230,y),P(445,y+32)], fill=LINE, width=int(18*k))
-        d.line([P(794,y),P(579,y+32)], fill=LINE, width=int(18*k))
-    for x in (400, 512, 624):
-        d.line([P(x + 26*(1 if j % 2 else -1), 110 + j*42) for j in range(5)], fill=CREAM, width=int(30*k), joint="curve")
-    return im.resize((size, size), Image.LANCZOS)
+    from PIL import Image
+    src = Image.open("icon-source.png").convert("RGB")
+    if not maskable: return src.resize((size, size), Image.LANCZOS)
+    bg = src.getpixel((src.width//2, 10)); out = Image.new("RGB", (size, size), bg)
+    inner = int(size*0.8); out.paste(src.resize((inner, inner), Image.LANCZOS), ((size-inner)//2,)*2); return out
+
 os.makedirs("icons", exist_ok=True)
 for s in (180, 192, 512): draw_icon(s).save(f"icons/icon-{s}.png")
 for s in (192, 512): draw_icon(s, True).save(f"icons/icon-maskable-{s}.png")
