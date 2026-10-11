@@ -31,17 +31,29 @@ Flow: list, add each recipe to recipes.json + images/, `python3 build.py`, commi
 - `python3 shopping_queue.py mark <id> processing|done|failed`
 - `python3 shopping_queue.py post-result <request_id> result.json` inserts the result (the cart shows the newest one) and marks the request done.
 
-Result JSON shape (see `shopping_result.example.json`; that file is fake sample data):
+Result JSON shape (see `shopping_result.example.json`, which is fake sample data). Check a file with `python3 shopping_queue.py validate file.json`.
+Older results without the newer fields still render.
 ```json
 {
-  "zip": "60601",
+  "zip": "78602",
   "generated_at": "ISO-8601 timestamp",
   "currency": "USD",
-  "stores": [{"id": "a", "name": "Store", "address": "...", "distance_mi": 1.2, "total": 18.47}],
-  "picks":  [{"store": "a", "item": "cart item text", "product": "Product name", "brand": "Brand",
-              "why_clean": "why it's a clean choice", "price": 5.48, "unit": "12 oz", "url": "https://..."}],
-  "cheapest_store": "a",
+  "stores": [{"id": "heb", "name": "Store", "address": "...", "distance_mi": 1.2,
+              "subtotal": 20.47, "coupon_savings": 2.00, "total": 18.47,
+              "items_found": 5, "items_missing": ["cart item text"]}],
+  "picks":  [{"store": "heb", "item": "cart item text", "product": "Product name", "brand": "Brand",
+              "why_clean": "why it's a clean choice", "price": 5.48, "unit": "12 oz", "url": "https://...",
+              "coupon": {"description": "$1 off", "savings": 1.00, "source_url": "https://...",
+                         "type": "digital | manufacturer | weekly_ad | sale"},
+              "final_price": 4.48}],
+  "cheapest_store": "heb",
+  "top3": ["heb", "walmart", "target"],
+  "hybrid": {"stores": ["heb", "walmart"],
+             "assignments": [{"item": "cart item text", "store": "heb"}],
+             "subtotal": 30.00, "coupon_savings": 2.00, "total": 28.00,
+             "savings_vs_best_single": 1.50, "note": "free text"},
   "notes": "free text"
 }
 ```
-`picks[].store` refers to `stores[].id`. The app highlights the store with the lowest `total` as "Cheapest overall".
+- `picks[].store`, `cheapest_store`, `top3[]` and `hybrid.stores[]` all refer to `stores[].id`. `coupon` may be `null`. Unknown prices and totals are `null`; never guess.
+- The app shows: Cheapest overall (`cheapest_store`, otherwise the lowest-total store with no missing items), the Best 2-store split card when `hybrid` is present, then a Top 3 stores section with expandable cards (each pick's price, coupon line and savings in green, final price, then subtotal, coupons saved and total, plus any missing items), then All stores checked, then notes.
