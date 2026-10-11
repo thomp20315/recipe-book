@@ -81,5 +81,29 @@
       "If desired, melt the butter and mix it with the honey. Drizzle or brush a little over each serving before eating.",
       "Let the meal prep bowls cool before covering and refrigerating."
     ]
+  },
+  {
+    "id": "sandra-lee-baby-back-ribs",
+    "title": "Baby Back Ribs",
+    "description": "Recipe courtesy of Sandra Lee (Semi-Homemade Cooking, episode: Weekend Gathering). Level: Easy.",
+    "servings": "4",
+    "prepTime": "5 min",
+    "cookTime": "1 hr 8 min",
+    "totalTime": "1 hr 13 min",
+    "image": null,
+    "imageUrl": null,
+    "source": "https://www.foodnetwork.com/recipes/sandra-lee/baby-back-ribs-recipe-1951610",
+    "sourceName": "Food Network (Sandra Lee)",
+    "addedBy": "Bailey Thompson",
+    "ingredients": [
+      "2 full racks (quartered) baby back ribs",
+      "1-quart beef broth",
+      "2 cups barbeque sauce (recommended: Bullseye Original Barbeque Sauce)",
+      "1 cup honey"
+    ],
+    "steps": [
+      "Place ribs and beef broth in a large heavy pot or Dutch oven, and add enough water to fully cover ribs. Simmer over low heat for about 1 hour. Once tender, remove and set aside.",
+      "Preheat the grill to medium heat. In a medium bowl, combine barbeque sauce and honey. Baste ribs generously with sauce and grill for about 4 minutes on each side or until desired degree of doneness."
+    ]
   }
 ]
