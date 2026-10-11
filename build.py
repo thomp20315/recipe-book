@@ -4,26 +4,28 @@ import json, html
 R = json.load(open('recipes.json'))
 e = html.escape
 RATINGS_URL = "https://api.restful-api.dev/objects/ff808181a09d98f701a12cb4455140ad"  # shared ratings store (not in recipes.json)
-RATE_ROWS = "".join(f'<div class="rrow" data-who="{w}"><span class="who">{lbl}</span><span class="stars">' + "".join(f'<button type="button" class="star" data-v="{v}" aria-label="{lbl} {v} star">&#9733;</button>' for v in range(1, 6)) + '</span></div>' for w, lbl in (("mom", "Mom"), ("dad", "Dad"), ("kids", "Kids")))
+RATE_ROWS = "".join(f'<div class="rrow" data-who="{w}"><span class="who">{lbl}</span><span class="stars">' + "".join(f'<button type="button" class="star" data-v="{v}" aria-label="{lbl} {v} star">&#9733;</button>' for v in range(1, 6)) + f'</span><button type="button" class="clr" hidden aria-label="Clear {lbl} rating">Clear</button></div>' for w, lbl in (("mom", "Mom"), ("dad", "Dad"), ("kids", "Kids")))
 RATE_CSS = """.card,.imgwrap{position:relative}.badge{position:absolute;top:.6rem;right:.6rem;background:#b5542dee;color:#fff8ef;font:700 .95rem Georgia,serif;padding:.3rem .65rem;border-radius:20px;box-shadow:0 2px 8px #0003;z-index:2}
 .badge[hidden]{display:none}.ratings{background:#fbf5ec;border-radius:12px;padding:.4rem 1rem .6rem;margin:1rem 0}.ratings h4{margin:.6rem 0}
 .rrow{display:flex;align-items:center;gap:.6rem;margin:.3rem 0}.who{width:3.2rem;font-weight:600;color:#6b4a35}
 .star{background:none;border:0;font-size:1.9rem;line-height:1;padding:.1rem .15rem;color:#e2c9ad;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.star.on{color:#d9822b}.rmsg{font-size:.85rem;color:#8a6a55;min-height:1.1em;margin:.2rem 0 0}"""
+.star.on{color:#d9822b}.clr{margin-left:auto;background:#f3e3cf;color:#8a3a1c;border:0;border-radius:14px;padding:.3rem .7rem;font:600 .8rem Georgia,serif;cursor:pointer}.clr[hidden]{display:none}.rmsg{font-size:.85rem;color:#8a6a55;min-height:1.1em;margin:.2rem 0 0}"""
 RATE_JS = """<script>
 (function(){
 var URL_=%s,data={},busy=false;
 function avg(r){var v=['mom','dad','kids'].map(function(k){return r&&r[k]}).filter(function(x){return x>=1&&x<=5});return v.length?(v.reduce(function(a,b){return a+b},0)/v.length):null;}
 function render(){document.querySelectorAll('.badge').forEach(function(b){var a=avg(data[b.dataset.rid]);if(a){b.textContent='\\u2605 '+a.toFixed(1);b.hidden=false}else b.hidden=true;});
 document.querySelectorAll('.ratings').forEach(function(box){var r=data[box.dataset.rid]||{};box.querySelectorAll('.rrow').forEach(function(row){var v=r[row.dataset.who]||0;
-row.querySelectorAll('.star').forEach(function(s){s.classList.toggle('on',+s.dataset.v<=v)});});});}
+row.querySelectorAll('.star').forEach(function(s){s.classList.toggle('on',+s.dataset.v<=v)});row.querySelector('.clr').hidden=!v;});});}
 function load(){return fetch(URL_+'?t='+Date.now(),{cache:'no-store'}).then(function(r){if(!r.ok)throw r.status;return r.json()}).then(function(j){data=(j.data&&j.data.ratings)||{};render();return data;});}
+function setv(rid,who,v){data[rid]=data[rid]||{};if(v)data[rid][who]=v;else{delete data[rid][who];if(!Object.keys(data[rid]).length)delete data[rid];}}
 function msg(box,t){var m=box.querySelector('.rmsg');if(m)m.textContent=t;}
-document.addEventListener('click',function(e){var s=e.target.closest('.star');if(!s)return;e.preventDefault();var box=s.closest('.ratings'),rid=box.dataset.rid,who=s.closest('.rrow').dataset.who,v=+s.dataset.v;
-if(busy)return;busy=true;var prev=JSON.parse(JSON.stringify(data));data[rid]=data[rid]||{};data[rid][who]=v;render();msg(box,'Saving\\u2026');
-load().catch(function(){return data}).then(function(fresh){data=fresh||{};data[rid]=data[rid]||{};data[rid][who]=v;render();
+document.addEventListener('click',function(e){var s=e.target.closest('.star,.clr');if(!s)return;e.preventDefault();var box=s.closest('.ratings'),rid=box.dataset.rid,who=s.closest('.rrow').dataset.who,
+cur=(data[rid]||{})[who]||0,v=s.classList.contains('clr')?0:+s.dataset.v;if(v&&v===cur)v=0;
+if(busy)return;busy=true;var prev=JSON.parse(JSON.stringify(data));setv(rid,who,v);render();msg(box,'Saving\\u2026');
+load().catch(function(){return data}).then(function(fresh){data=fresh||{};setv(rid,who,v);render();
 return fetch(URL_,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:'thompson-recipe-book-ratings',data:{ratings:data}})});})
-.then(function(r){if(!r.ok)throw r.status;msg(box,'Saved \\u2713');}).catch(function(){data=prev;render();msg(box,'Could not save \\u2014 check your connection and try again.');})
+.then(function(r){if(!r.ok)throw r.status;msg(box,v?'Saved \\u2713':'Cleared \\u2713');}).catch(function(){data=prev;render();msg(box,'Could not save \\u2014 check your connection and try again.');})
 .then(function(){busy=false;});});
 load().catch(function(){});
 document.addEventListener('visibilitychange',function(){if(!document.hidden)load().catch(function(){});});
