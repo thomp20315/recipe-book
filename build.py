@@ -35,7 +35,10 @@ def img(r, cls):
     if r.get("image"):
         return f'<img class="{cls}" src="{e(r["image"])}" alt="">'
     return f'<div class="ph {cls}">&#127858;</div>'
-cards = ''.join(f'<a class="card" href="#{e(r["id"])}">{img(r,"")}<span class="badge" data-rid="{e(r["id"])}" hidden></span><h3>{e(r["title"])}</h3></a>' for r in R)
+import unicodedata
+def norm(s): return ''.join(c for c in unicodedata.normalize('NFD', s.lower()) if unicodedata.category(c) != 'Mn')
+def stext(r): return norm(' '.join([r.get('title') or '', ' '.join(r.get('ingredients') or []), r.get('sourceName') or '', r.get('source') or '', r.get('addedBy') or '']))
+cards = ''.join(f'<a class="card" data-s="{e(stext(r))}" href="#{e(r["id"])}">{img(r,"")}<span class="badge" data-rid="{e(r["id"])}" hidden></span><h3>{e(r["title"])}</h3></a>' for r in R)
 pages = ''
 for r in R:
     meta = ''.join(f'<span><b>{k}</b> {e(str(r[f]))}</span>' for k, f in
@@ -53,12 +56,26 @@ header h1{margin:0;font-size:2.2rem}header p{margin:.3rem 0 0;opacity:.85}main{m
 box-shadow:0 3px 12px #0002;text-decoration:none;color:inherit;transition:transform .15s}.card:hover{transform:translateY(-4px)}
 .ph{display:flex;align-items:center;justify-content:center;font-size:4rem;background:#f3e3cf;aspect-ratio:4/3}.ph.hero{max-height:260px;width:100%;border-radius:10px}.card img,.card .ph{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}.card h3{margin:0;padding:.9rem 1rem;font-size:1.1rem}
 .recipe{display:none;background:#fff;border-radius:14px;padding:1.5rem;box-shadow:0 3px 12px #0002}.recipe:target{display:block}
-main:has(.recipe:target) .grid{display:none}.hero{width:100%;max-height:420px;object-fit:cover;border-radius:10px}
+main:has(.recipe:target) .grid,main:has(.recipe:target) .search,main:has(.recipe:target) .nomatch{display:none!important}.hero{width:100%;max-height:420px;object-fit:cover;border-radius:10px}
 .back{color:#b5542d;text-decoration:none;display:inline-block;margin-bottom:1rem}h2{color:#8a3a1c;margin:.8rem 0 .3rem}.desc{font-style:italic}
 .meta{display:flex;flex-wrap:wrap;gap:.6rem;margin:1rem 0}.meta span{background:#f3e3cf;padding:.35rem .8rem;border-radius:20px}
 .cols{display:grid;grid-template-columns:1fr 1.6fr;gap:2rem}h4{color:#b5542d;border-bottom:2px solid #f3e3cf;padding-bottom:.3rem}
 li{margin:.45rem 0;line-height:1.5}.src a{color:#b5542d}@media(max-width:700px){.cols{grid-template-columns:1fr}header h1{font-size:1.7rem}}
 .card .ph,.ph{display:grid !important;place-items:center;text-align:center}'''
+SEARCH_CSS = """.search{position:sticky;top:env(safe-area-inset-top);z-index:10;display:flex;align-items:center;background:#fff;border:1.5px solid #e2c9ad;border-radius:28px;padding:0 .4rem 0 .9rem;margin:-.4rem 0 1.2rem;box-shadow:0 4px 14px #3b2a1e22}
+.sicon{font-size:1rem;opacity:.6;margin-right:.4rem}.search input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:16px Georgia,serif;color:#3b2a1e;padding:.8rem 0;-webkit-appearance:none;appearance:none}
+.search input::-webkit-search-cancel-button{display:none}.search:focus-within{border-color:#b5542d}
+.qx{border:0;background:#f3e3cf;color:#8a3a1c;width:2rem;height:2rem;border-radius:50%;font-size:1.3rem;line-height:1;cursor:pointer;flex-shrink:0}.qx[hidden]{display:none}
+.card.hide{display:none}.nomatch{text-align:center;color:#8a6a55;font-style:italic;padding:2rem 1rem}.nomatch[hidden]{display:none}"""
+SEARCH_JS = """<script>
+(function(){var q=document.getElementById('q'),x=document.getElementById('qx'),nm=document.getElementById('nomatch'),nmq=document.getElementById('nmq'),cards=[].slice.call(document.querySelectorAll('.card'));
+function norm(s){return s.toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'');}
+function run(){var raw=q.value,w=norm(raw).split(/\\s+/).filter(Boolean),n=0;
+cards.forEach(function(c){var ok=w.every(function(t){return c.dataset.s.indexOf(t)>=0});c.classList.toggle('hide',!ok);if(ok)n++;});
+x.hidden=!raw;nm.hidden=n>0;nmq.textContent=raw.trim();}
+q.addEventListener('input',run);x.addEventListener('click',function(){q.value='';run();q.focus();});
+q.addEventListener('keydown',function(e){if(e.key==='Escape'){q.value='';run();}if(e.key==='Enter')q.blur();});run();})();
+</script>"""
 ADD_CSS = """.fab{position:fixed;right:calc(1.2rem + env(safe-area-inset-right));bottom:calc(1.2rem + env(safe-area-inset-bottom));z-index:20;
 background:#b5542d;color:#fff8ef;border:0;border-radius:30px;padding:.9rem 1.3rem;font:600 1rem Georgia,serif;box-shadow:0 6px 18px #0004;cursor:pointer}
 .fab:active{transform:scale(.96)}main:has(.recipe:target)~.fab{display:none}
@@ -105,8 +122,8 @@ open('index.html', 'w').write(f'''<!doctype html><html><head><meta charset="utf-
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Recipes"><link rel="apple-touch-icon" href="icons/dog-icon-180.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/dog-icon-192.png">
-<title>Thompson Recipe Book</title><style>{css}{ADD_CSS}{RATE_CSS}</style></head><body><header><h1>Thompson Recipe Book</h1></header>
-<main><div class="grid">{cards}</div>{pages}</main>{ADD_HTML}{RATE_JS}<script>
+<title>Thompson Recipe Book</title><style>{css}{ADD_CSS}{RATE_CSS}{SEARCH_CSS}</style></head><body><header><h1>Thompson Recipe Book</h1></header>
+<main><div class="search" role="search"><span class="sicon" aria-hidden="true">&#128269;</span><input id="q" type="search" placeholder="Search recipes, ingredients, who added&hellip;" aria-label="Search recipes" autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="search"><button type="button" id="qx" class="qx" aria-label="Clear search" hidden>&times;</button></div><div class="grid">{cards}</div><p class="nomatch" id="nomatch" hidden>No recipes match &ldquo;<span id="nmq"></span>&rdquo;. Try another word.</p>{pages}</main>{ADD_HTML}{RATE_JS}{SEARCH_JS}<script>
 if('serviceWorker' in navigator){{navigator.serviceWorker.register('sw.js',{{updateViaCache:'none'}}).then(r=>{{r.update();document.addEventListener('visibilitychange',()=>{{if(!document.hidden)r.update()}})}});let R0=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{{if(R0)location.reload();R0=true}})}}
 window.addEventListener('hashchange',function(){{window.scrollTo(0,0)}});
 </script></body></html>''')
