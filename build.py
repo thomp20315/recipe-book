@@ -31,7 +31,7 @@ cur=(data[rid]||{})[who]||0,v=+s.dataset.v;if(v&&v===cur)v=0;
 if(busy)return;busy=true;var prev=JSON.parse(JSON.stringify(data));setv(rid,who,v);render();msg(box,'Saving\\u2026');
 var q=v?SB('ratings?on_conflict=recipe_id,person',{method:'POST',prefer:'resolution=merge-duplicates,return=minimal',body:{recipe_id:rid,person:who,stars:v}})
 :SB('ratings?recipe_id=eq.'+encodeURIComponent(rid)+'&person=eq.'+who,{method:'DELETE'});
-q.then(function(){msg(box,v?'Saved \\u2713':'Cleared \\u2713');return load();}).catch(function(){data=prev;render();msg(box,'Could not save \\u2014 check your connection and try again.');})
+q.then(function(){msg(box,v?'Saved \\u2713':'Cleared \\u2713');busy=false;load().catch(function(){});}).catch(function(){data=prev;render();msg(box,'Could not save \\u2014 check your connection and try again.');})
 .then(function(){busy=false;});});
 load().catch(function(){});setInterval(function(){if(!document.hidden)load().catch(function(){})},30000);
 document.addEventListener('visibilitychange',function(){if(!document.hidden)load().catch(function(){});});
