@@ -152,9 +152,9 @@ var h='<h4>&#129534; Shopping results</h4><div class="when">'+esc(new Date(row.c
 if(cheapest)h+='<div class="best">Cheapest overall: '+esc(cheapest.name)+' &mdash; '+money(cheapest.total)+(num(cheapest.coupon_savings)?' <small>(after '+money(cheapest.coupon_savings)+' in coupons)</small>':'')+'</div>';
 var hy=r.hybrid;
 if(hy&&Array.isArray(hy.assignments)&&hy.assignments.length){var hs=(hy.stores||[]).map(function(id){return byId[id]?byId[id].name:id});
-h+='<div class="hyb"><div class="sh"><span>&#128256; Best 2-store split</span><span>'+money(hy.total)+'</span></div><div class="sa">'+esc(hs.join(' + '))+(num(hy.savings_vs_best_single)?' &middot; <b class="sv">saves '+money(hy.savings_vs_best_single)+'</b> vs. one store':'')+'</div>';
+h+='<details class="store hyb"><summary><div class="sh"><span>&#128256; Best 2-store split</span><span>'+money(hy.total)+'</span></div><div class="sa">'+esc(hs.join(' + '))+(num(hy.savings_vs_best_single)?' &middot; <b class="sv">saves '+money(hy.savings_vs_best_single)+'</b> vs. one store':'')+'</div></summary>';
 (hy.stores||[]).forEach(function(id){var its=hy.assignments.filter(function(a){return a.store===id});if(!its.length)return;h+='<div class="hgrp"><b>'+esc(byId[id]?byId[id].name:id)+'</b><ul>'+its.map(function(a){return '<li>'+esc(a.item)+'</li>'}).join('')+'</ul></div>';});
-h+=sums(hy)+(hy.note?'<p class="notes">'+esc(hy.note)+'</p>':'')+'</div>';}
+h+=sums(hy)+(hy.note?'<p class="notes">'+esc(hy.note)+'</p>':'')+'</details>';}
 if(top.length){h+='<h5 class="rh">Top '+top.length+' store'+(top.length>1?'s':'')+'</h5>';
 h+=top.map(function(s,ix){var ps=picks.filter(function(p){return p.store===s.id||p.store===s.name});
 var miss=Array.isArray(s.items_missing)?s.items_missing:[];
