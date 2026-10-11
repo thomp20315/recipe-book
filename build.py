@@ -79,7 +79,7 @@ open('index.html', 'w').write(f'''<!doctype html><html><head><meta charset="utf-
 <link rel="icon" type="image/png" sizes="192x192" href="icons/dog-icon-192.png">
 <title>Thompson Recipe Book</title><style>{css}{ADD_CSS}</style></head><body><header><h1>Thompson Recipe Book</h1></header>
 <main><div class="grid">{cards}</div>{pages}</main>{ADD_HTML}<script>
-if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');
+if('serviceWorker' in navigator){{navigator.serviceWorker.register('sw.js',{{updateViaCache:'none'}}).then(r=>{{r.update();document.addEventListener('visibilitychange',()=>{{if(!document.hidden)r.update()}})}});let R0=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{{if(R0)location.reload();R0=true}})}}
 window.addEventListener('hashchange',function(){{window.scrollTo(0,0)}});
 </script></body></html>''')
 print(f'Built index.html with {len(R)} recipe(s)')
@@ -120,7 +120,7 @@ self.addEventListener('fetch', e => {
   if (req.destination === 'image') {
     e.respondWith(caches.match(req).then(hit => { const net = fetch(req).then(r => save(req, r)).catch(() => hit); return hit || net; }));
   } else {
-    e.respondWith(fetch(req).then(r => save(req, r))
+    e.respondWith(fetch(req, {cache: 'no-store'}).then(r => save(req, r))
       .catch(() => caches.match(req, {ignoreSearch: true}).then(h => h || caches.match('./'))));
   }
 });

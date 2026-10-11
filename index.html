@@ -67,6 +67,6 @@ var a=document.createElement('a');a.href=href;a.style.display='none';document.bo
 link.value='';notes.value='';close();});
 })();
 </script><script>
-if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})});let R0=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(R0)location.reload();R0=true})}
 window.addEventListener('hashchange',function(){window.scrollTo(0,0)});
 </script></body></html>
