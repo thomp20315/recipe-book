@@ -37,7 +37,7 @@ def validate(r):
         if c is not None:
             if not isinstance(c, dict): e.append(f"picks[{i}].coupon must be an object or null"); continue
             if c.get("type") not in ("digital", "manufacturer", "weekly_ad", "sale"): e.append(f"picks[{i}].coupon.type must be digital|manufacturer|weekly_ad|sale")
-            if not _num(c.get("savings"), False): e.append(f"picks[{i}].coupon.savings must be a number")
+            if not _num(c.get("savings")): e.append(f"picks[{i}].coupon.savings must be a number or null")
             if c.get("source_url") and not str(c["source_url"]).startswith(("http://", "https://")): e.append(f"picks[{i}].coupon.source_url must be http(s)")
     if r.get("cheapest_store") is not None and r["cheapest_store"] not in ids: e.append("cheapest_store is not a stores[].id")
     if "top3" in r:
