@@ -7,9 +7,9 @@ RATINGS_URL = "https://api.restful-api.dev/objects/ff808181a09d98f701a12cb445514
 RATE_ROWS = "".join(f'<div class="rrow" data-who="{w}"><span class="who">{lbl}</span><span class="stars">' + "".join(f'<button type="button" class="star" data-v="{v}" aria-label="{lbl} {v} star">&#9733;</button>' for v in range(1, 6)) + f'</span><button type="button" class="clr" hidden aria-label="Clear {lbl} rating">Clear</button></div>' for w, lbl in (("mom", "Mom"), ("dad", "Dad"), ("kids", "Kids")))
 RATE_CSS = """.card,.imgwrap{position:relative}.badge{position:absolute;top:.6rem;right:.6rem;background:#b5542dee;color:#fff8ef;font:700 .95rem Georgia,serif;padding:.3rem .65rem;border-radius:20px;box-shadow:0 2px 8px #0003;z-index:2}
 .badge[hidden]{display:none}.ratings{background:#fbf5ec;border-radius:12px;padding:.4rem 1rem .6rem;margin:1rem 0}.ratings h4{margin:.6rem 0}
-.rrow{display:flex;align-items:center;gap:.6rem;margin:.3rem 0}.who{width:3.2rem;font-weight:600;color:#6b4a35}
-.star{background:none;border:0;font-size:1.9rem;line-height:1;padding:.1rem .15rem;color:#e2c9ad;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.star.on{color:#d9822b}.clr{margin-left:auto;background:#f3e3cf;color:#8a3a1c;border:0;border-radius:14px;padding:.3rem .7rem;font:600 .8rem Georgia,serif;cursor:pointer}.clr[hidden]{display:none}.rmsg{font-size:.85rem;color:#8a6a55;min-height:1.1em;margin:.2rem 0 0}"""
+.rrow{display:flex;align-items:center;gap:.6rem;margin:.3rem 0}.stars{display:flex;flex-wrap:nowrap;flex-shrink:0}.rrow{flex-wrap:nowrap}.who{width:2.8rem;flex-shrink:0;font-weight:600;color:#6b4a35}
+.star{background:none;border:0;font-size:1.75rem;line-height:1;padding:.1rem .1rem;color:#e2c9ad;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.star.on{color:#d9822b}.clr{margin-left:auto;flex-shrink:0;background:#f3e3cf;color:#8a3a1c;border:0;border-radius:14px;padding:.3rem .7rem;font:600 .8rem Georgia,serif;cursor:pointer}.clr[hidden]{display:none}.rmsg{font-size:.85rem;color:#8a6a55;min-height:1.1em;margin:.2rem 0 0}"""
 RATE_JS = """<script>
 (function(){
 var URL_=%s,data={},busy=false;
