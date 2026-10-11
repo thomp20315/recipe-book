@@ -1,0 +1,17 @@
+{
+  "zip": "00000",
+  "generated_at": "2026-10-11T17:00:00-05:00",
+  "currency": "USD",
+  "stores": [
+    {"id": "a", "name": "FAKE Sample Market", "address": "123 Example St (sample data)", "distance_mi": 1.2, "total": 18.47},
+    {"id": "b", "name": "FAKE Demo Grocer", "address": "456 Placeholder Ave (sample data)", "distance_mi": 3.8, "total": 21.10}
+  ],
+  "picks": [
+    {"store": "a", "item": "2 full racks baby back ribs", "product": "SAMPLE Pork Ribs", "brand": "Example Farms", "why_clean": "No added hormones (sample text)", "price": 12.99, "unit": "rack", "url": "https://example.com/sample-ribs"},
+    {"store": "a", "item": "1 cup honey", "product": "SAMPLE Raw Honey 12 oz", "brand": "Demo Bees", "why_clean": "Single ingredient (sample text)", "price": 5.48, "unit": "12 oz", "url": "https://example.com/sample-honey"},
+    {"store": "b", "item": "2 full racks baby back ribs", "product": "SAMPLE Ribs Value Pack", "brand": "Placeholder Meats", "why_clean": "Minimally processed (sample text)", "price": 14.60, "unit": "rack", "url": "https://example.com/sample-ribs-2"},
+    {"store": "b", "item": "1 cup honey", "product": "SAMPLE Clover Honey", "brand": "Fake Hive Co", "why_clean": "No additives (sample text)", "price": 6.50, "unit": "16 oz", "url": "https://example.com/sample-honey-2"}
+  ],
+  "cheapest_store": "a",
+  "notes": "THIS IS FAKE SAMPLE DATA for testing the layout. Prices are not real."
+}
