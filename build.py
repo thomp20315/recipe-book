@@ -3,11 +3,37 @@
 import json, html
 R = json.load(open('recipes.json'))
 e = html.escape
+RATINGS_URL = "https://api.restful-api.dev/objects/ff808181a09d98f701a12cb4455140ad"  # shared ratings store (not in recipes.json)
+RATE_ROWS = "".join(f'<div class="rrow" data-who="{w}"><span class="who">{lbl}</span><span class="stars">' + "".join(f'<button type="button" class="star" data-v="{v}" aria-label="{lbl} {v} star">&#9733;</button>' for v in range(1, 6)) + '</span></div>' for w, lbl in (("mom", "Mom"), ("dad", "Dad"), ("kids", "Kids")))
+RATE_CSS = """.card,.imgwrap{position:relative}.badge{position:absolute;top:.6rem;right:.6rem;background:#b5542dee;color:#fff8ef;font:700 .95rem Georgia,serif;padding:.3rem .65rem;border-radius:20px;box-shadow:0 2px 8px #0003;z-index:2}
+.badge[hidden]{display:none}.ratings{background:#fbf5ec;border-radius:12px;padding:.4rem 1rem .6rem;margin:1rem 0}.ratings h4{margin:.6rem 0}
+.rrow{display:flex;align-items:center;gap:.6rem;margin:.3rem 0}.who{width:3.2rem;font-weight:600;color:#6b4a35}
+.star{background:none;border:0;font-size:1.9rem;line-height:1;padding:.1rem .15rem;color:#e2c9ad;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.star.on{color:#d9822b}.rmsg{font-size:.85rem;color:#8a6a55;min-height:1.1em;margin:.2rem 0 0}"""
+RATE_JS = """<script>
+(function(){
+var URL_=%s,data={},busy=false;
+function avg(r){var v=['mom','dad','kids'].map(function(k){return r&&r[k]}).filter(function(x){return x>=1&&x<=5});return v.length?(v.reduce(function(a,b){return a+b},0)/v.length):null;}
+function render(){document.querySelectorAll('.badge').forEach(function(b){var a=avg(data[b.dataset.rid]);if(a){b.textContent='\\u2605 '+a.toFixed(1);b.hidden=false}else b.hidden=true;});
+document.querySelectorAll('.ratings').forEach(function(box){var r=data[box.dataset.rid]||{};box.querySelectorAll('.rrow').forEach(function(row){var v=r[row.dataset.who]||0;
+row.querySelectorAll('.star').forEach(function(s){s.classList.toggle('on',+s.dataset.v<=v)});});});}
+function load(){return fetch(URL_+'?t='+Date.now(),{cache:'no-store'}).then(function(r){if(!r.ok)throw r.status;return r.json()}).then(function(j){data=(j.data&&j.data.ratings)||{};render();return data;});}
+function msg(box,t){var m=box.querySelector('.rmsg');if(m)m.textContent=t;}
+document.addEventListener('click',function(e){var s=e.target.closest('.star');if(!s)return;e.preventDefault();var box=s.closest('.ratings'),rid=box.dataset.rid,who=s.closest('.rrow').dataset.who,v=+s.dataset.v;
+if(busy)return;busy=true;var prev=JSON.parse(JSON.stringify(data));data[rid]=data[rid]||{};data[rid][who]=v;render();msg(box,'Saving\\u2026');
+load().catch(function(){return data}).then(function(fresh){data=fresh||{};data[rid]=data[rid]||{};data[rid][who]=v;render();
+return fetch(URL_,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:'thompson-recipe-book-ratings',data:{ratings:data}})});})
+.then(function(r){if(!r.ok)throw r.status;msg(box,'Saved \\u2713');}).catch(function(){data=prev;render();msg(box,'Could not save \\u2014 check your connection and try again.');})
+.then(function(){busy=false;});});
+load().catch(function(){});
+document.addEventListener('visibilitychange',function(){if(!document.hidden)load().catch(function(){});});
+})();
+</script>""" % json.dumps(RATINGS_URL)
 def img(r, cls):
     if r.get("image"):
         return f'<img class="{cls}" src="{e(r["image"])}" alt="">'
     return f'<div class="ph {cls}">&#127858;</div>'
-cards = ''.join(f'<a class="card" href="#{e(r["id"])}">{img(r,"")}<h3>{e(r["title"])}</h3></a>' for r in R)
+cards = ''.join(f'<a class="card" href="#{e(r["id"])}">{img(r,"")}<span class="badge" data-rid="{e(r["id"])}" hidden></span><h3>{e(r["title"])}</h3></a>' for r in R)
 pages = ''
 for r in R:
     meta = ''.join(f'<span><b>{k}</b> {e(str(r[f]))}</span>' for k, f in
@@ -15,8 +41,8 @@ for r in R:
     ing = ''.join(f'<li>{e(i)}</li>' for i in r['ingredients'])
     st = ''.join(f'<li>{e(s)}</li>' for s in r['steps'])
     pages += f'''<section class="recipe" id="{e(r["id"])}"><a class="back" href="#">&larr; All recipes</a>
-{img(r,"hero")}<h2>{e(r["title"])}</h2><p class="desc">{e(r.get("description",""))}</p>
-<div class="meta">{meta}</div><div class="cols"><div><h4>Ingredients</h4><ul>{ing}</ul></div>
+<div class="imgwrap">{img(r,"hero")}<span class="badge" data-rid="{e(r["id"])}" hidden></span></div><h2>{e(r["title"])}</h2><p class="desc">{e(r.get("description",""))}</p>
+<div class="meta">{meta}</div><div class="ratings" data-rid="{e(r["id"])}"><h4>Family ratings</h4>{RATE_ROWS}<p class="rmsg"></p></div><div class="cols"><div><h4>Ingredients</h4><ul>{ing}</ul></div>
 <div><h4>Steps</h4><ol>{st}</ol></div></div>
 <p class="src">Source: <a href="{e(r["source"])}" target="_blank" rel="noopener">{e(r.get("sourceName", r["source"]))}</a></p></section>'''
 css = '''body{margin:0;font-family:Georgia,serif;background:#fbf5ec;color:#3b2a1e}header{background:#b5542d;color:#fff8ef;text-align:center;padding:calc(2rem + env(safe-area-inset-top)) calc(1rem + env(safe-area-inset-right)) 2rem calc(1rem + env(safe-area-inset-left))}main{padding-left:calc(1.5rem + env(safe-area-inset-left))!important;padding-right:calc(1.5rem + env(safe-area-inset-right))!important;padding-bottom:calc(1.5rem + env(safe-area-inset-bottom))!important}
@@ -77,8 +103,8 @@ open('index.html', 'w').write(f'''<!doctype html><html><head><meta charset="utf-
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Recipes"><link rel="apple-touch-icon" href="icons/dog-icon-180.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/dog-icon-192.png">
-<title>Thompson Recipe Book</title><style>{css}{ADD_CSS}</style></head><body><header><h1>Thompson Recipe Book</h1></header>
-<main><div class="grid">{cards}</div>{pages}</main>{ADD_HTML}<script>
+<title>Thompson Recipe Book</title><style>{css}{ADD_CSS}{RATE_CSS}</style></head><body><header><h1>Thompson Recipe Book</h1></header>
+<main><div class="grid">{cards}</div>{pages}</main>{ADD_HTML}{RATE_JS}<script>
 if('serviceWorker' in navigator){{navigator.serviceWorker.register('sw.js',{{updateViaCache:'none'}}).then(r=>{{r.update();document.addEventListener('visibilitychange',()=>{{if(!document.hidden)r.update()}})}});let R0=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{{if(R0)location.reload();R0=true}})}}
 window.addEventListener('hashchange',function(){{window.scrollTo(0,0)}});
 </script></body></html>''')
