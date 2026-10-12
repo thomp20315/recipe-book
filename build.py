@@ -135,7 +135,7 @@ CART_HTML = """<div class="toast" id="toast" role="status" aria-live="polite"></
 <script>
 (function(){
 var REC=""" + json.dumps({r["id"]: {"t": r["title"], "i": r["ingredients"]} for r in R}, ensure_ascii=False) + """;
-var items=[],$=function(i){return document.getElementById(i)},IC=""" + json.dumps({k: ic(k) for k in ("leaf","tag","pencil","trash")}) + """;
+var items=[],$=function(i){return document.getElementById(i)},IC=""" + json.dumps({k: ic(k) for k in ("leaf","tag","pencil","trash","close")}) + """;
 function esc(s){var d=document.createElement('div');d.textContent=s==null?'':String(s);return d.innerHTML;}
 function safeUrl(u){return /^https?:\\/\\//i.test(u||'')?u:null;}
 function toast(t){var el=$('toast');el.textContent=t;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(function(){el.classList.remove('show')},2200);}
@@ -161,7 +161,48 @@ if(p.ingredients_checked===false)h+='<div class="fl"><span class="uv">Label not 
 if(p.swap)h+='<div class="swp">'+IC.leaf+'<span>'+esc(p.swap)+'</span></div>';
 if(c&&fp!=null)h+='<div class="fp">Final <span>'+money(fp)+'</span></div>';return h+'</div>';}
 function sums(s){return '<div class="sum"><div>Subtotal <span>'+money(num(s.subtotal)!=null?s.subtotal:s.total)+'</span></div>'+(num(s.coupon_savings)?'<div class="cp">Coupons saved <span>&minus;'+money(s.coupon_savings)+'</span></div>':'')+'<div class="tot">Total <span>'+money(s.total)+'</span></div></div>';}
-function renderResults(rows){var box=$('results');if(!rows||!rows.length){box.hidden=true;return;}var row=rows[0],r=row.result||{},st=r.stores||[],picks=r.picks||[];
+function custPair(){try{var v=JSON.parse(localStorage.getItem('custPair')||'[]');return Array.isArray(v)?v.slice(0,2):[]}catch(e){return []}}
+function setPair(p){try{localStorage.setItem('custPair',JSON.stringify(p))}catch(e){};_ro.cust=true;renderResults(window._rows);}
+function custSplit(r,a,b){var picks=(r.picks||[]).filter(function(p){return !p.pantry&&!p.optional&&num(p.final_price)!=null}),lines=[],asg=[],miss=[];
+picks.forEach(function(p){if(lines.indexOf(p.item)<0)lines.push(p.item)});
+lines.forEach(function(l){var c=picks.filter(function(p){return p.item===l&&(p.store===a||p.store===b)});if(!c.length){miss.push(l);return;}
+var top=Math.max.apply(null,c.map(function(p){return num(p.clean_score)||0}));var t=c.filter(function(p){return (num(p.clean_score)||0)>=top-3}).sort(function(x,y){return x.final_price-y.final_price});asg.push(t[0]);});
+var tot=asg.reduce(function(s,p){return s+p.final_price},0),cs=asg.reduce(function(s,p){return s+((p.coupon&&num(p.coupon.savings))||0)},0);
+var sc=asg.length?Math.round(10*asg.reduce(function(s,p){return s+(num(p.clean_score)||0)},0)/asg.length)/10:null;
+return {asg:asg,miss:miss,total:Math.round(tot*100)/100,coupons:Math.round(cs*100)/100,score:sc};}
+function custBox(r,byId){var st=(r.stores||[]);if(st.length<2||!(r.picks||[]).length)return '';var pr=custPair().filter(function(id){return byId[id]});
+var nm=function(id){return byId[id]?byId[id].name:id},sn=function(id){return nm(id).replace(/ (Supercenter|Farmers Market|plus!)/g,'').replace(/ (Bastrop|Austin East)$/,'')};
+var h='<details data-k="cust" class="store csplit"'+(rOpen('cust',false)?' open':'')+'><summary><div class="sh"><span>Custom 2-store split</span><span class="tr" id="custTr">';
+var res=pr.length===2?custSplit(r,pr[0],pr[1]):null;
+if(res)h+=ring(res.score)+money(res.total);h+='</span></div><div class="sa">'+(res?esc(nm(pr[0])+' + '+nm(pr[1])):'Drag or tap any two stores')+'</div></summary>';
+h+='<div class="chips2" id="custChips">'+st.map(function(s){var on=pr.indexOf(s.id)>=0;return '<button type="button" class="schip'+(on?' on':'')+'" draggable="true" data-sid="'+esc(s.id)+'"'+(on?' aria-pressed="true"':'')+'>'+ring(s.clean_score)+'<span>'+esc(sn(s.id))+'</span></button>'}).join('')+'</div>';
+h+='<div class="bubble" id="custBubble">'+[0,1].map(function(i){var id=pr[i];return '<button type="button" class="slot'+(id?' full':'')+'" data-slot="'+i+'" aria-label="'+(id?'Remove '+esc(nm(id)):'Empty slot '+(i+1))+'">'+(id?'<em>'+esc(sn(id))+'</em><i aria-hidden="true">'+IC.close+'</i>':'<span>Drop a store</span>')+'</button>'}).join('<span class="plus" aria-hidden="true">+</span>')+'</div>';
+if(res){var cl=st.filter(function(s){return num(s.clean_score)!=null&&num(s.total)!=null}).sort(function(x,y){return y.clean_score-x.clean_score||x.total-y.total})[0];
+var sv=cl?Math.round((cl.total-res.total)*100)/100:null;
+h+='<div class="custres" id="custRes">'+ring(res.score)+'<div><b>'+money(res.total)+'</b><small>Clean score '+res.score+(res.coupons?' &middot; '+money(res.coupons)+' in sales':'')+'</small>'+(cl&&sv!=null?'<small class="sv">'+(sv>=0?'Saves '+money(sv):money(-sv)+' more')+' vs. '+esc(cl.name)+' alone (cleanest, score '+cl.clean_score+')</small>':'')+'</div></div>';
+if(res.miss.length)h+='<div class="miss">Neither store has: '+res.miss.map(esc).join(', ')+'</div>';
+h+='<details data-k="custlist" class="wbw"'+(rOpen('custlist',false)?' open':'')+'><summary>What to buy where</summary>'+pr.map(function(id){var its=res.asg.filter(function(p){return p.store===id});return '<div class="hgrp"><b>'+esc(nm(id))+' <small>'+its.length+' items &middot; '+money(its.reduce(function(s,p){return s+p.final_price},0))+'</small></b><ul>'+its.map(function(p){return '<li><span class="cs '+(p.clean_score>=85?'g':p.clean_score>=65?'a':'r')+'">'+p.clean_score+'</span> '+esc(String(p.item).split(' \u2014 ')[0])+' <small>'+esc(p.product)+' &middot; '+money(p.final_price)+'</small></li>'}).join('')+'</ul></div>'}).join('')+'</details>';}
+return h+'</details>';}
+(function(){function fill(id){var p=custPair();if(p.indexOf(id)>=0)return;if(p.length<2)p.push(id);else p[1]=id;setPair(p);}
+function put(id,i){var p=custPair();var j=p.indexOf(id);if(j>=0)p.splice(j,1);if(i>p.length)i=p.length;p[i]=id;setPair(p.filter(Boolean).slice(0,2));}
+var suppress=0;
+document.addEventListener('click',function(e){var c=e.target.closest&&e.target.closest('.schip');if(c){if(Date.now()<suppress)return;fill(c.dataset.sid);return;}
+var s=e.target.closest&&e.target.closest('.slot.full');if(s){var p=custPair();p.splice(+s.dataset.slot,1);setPair(p);}});
+document.addEventListener('dragstart',function(e){var c=e.target.closest&&e.target.closest('.schip');if(!c)return;e.dataTransfer.setData('text/plain',c.dataset.sid);e.dataTransfer.effectAllowed='copy';c.classList.add('drag');});
+document.addEventListener('dragend',function(e){var c=e.target.closest&&e.target.closest('.schip');if(c)c.classList.remove('drag');document.querySelectorAll('.slot.over').forEach(function(x){x.classList.remove('over')});});
+document.addEventListener('dragover',function(e){var s=e.target.closest&&e.target.closest('.slot');if(!s)return;e.preventDefault();s.classList.add('over');});
+document.addEventListener('dragleave',function(e){var s=e.target.closest&&e.target.closest('.slot');if(s)s.classList.remove('over');});
+document.addEventListener('drop',function(e){var s=e.target.closest&&e.target.closest('.slot');if(!s)return;e.preventDefault();var id=e.dataTransfer.getData('text/plain');if(id)put(id,+s.dataset.slot);});
+var drag=null;
+document.addEventListener('pointerdown',function(e){if(e.pointerType==='mouse')return;var c=e.target.closest&&e.target.closest('.schip');if(!c)return;drag={c:c,x:e.clientX,y:e.clientY,g:null,id:e.pointerId};},{passive:true});
+document.addEventListener('pointermove',function(e){if(!drag||e.pointerId!==drag.id)return;var dx=e.clientX-drag.x,dy=e.clientY-drag.y;
+if(!drag.g){if(Math.abs(dx)+Math.abs(dy)<8)return;var g=drag.c.cloneNode(true);g.className='schip ghost';var b=drag.c.getBoundingClientRect();g.style.width=b.width+'px';drag.ox=drag.x-b.left;drag.oy=drag.y-b.top;document.body.appendChild(g);drag.g=g;drag.c.classList.add('drag');}
+drag.g.style.transform='translate('+(e.clientX-drag.ox)+'px,'+(e.clientY-drag.oy)+'px) scale(1.06)';
+var el=document.elementFromPoint(e.clientX,e.clientY),s=el&&el.closest('.slot');document.querySelectorAll('.slot.over').forEach(function(x){if(x!==s)x.classList.remove('over')});if(s)s.classList.add('over');});
+function end(e){if(!drag||e.pointerId!==drag.id)return;var d=drag;drag=null;if(!d.g)return;suppress=Date.now()+400;d.g.remove();d.c.classList.remove('drag');
+var el=e.type==='pointerup'&&document.elementFromPoint(e.clientX,e.clientY),s=el&&el.closest('.slot');document.querySelectorAll('.slot.over').forEach(function(x){x.classList.remove('over')});if(s)put(d.c.dataset.sid,+s.dataset.slot);}
+document.addEventListener('pointerup',end);document.addEventListener('pointercancel',end);})();
+function renderResults(rows){var box=$('results');window._rows=rows;if(!rows||!rows.length){box.hidden=true;return;}var row=rows[0],r=row.result||{},st=r.stores||[],picks=r.picks||[];
 var byId={};st.forEach(function(s){byId[s.id]=s});
 var priced=st.filter(function(s){return num(s.total)!=null}).sort(function(a,b){return a.total-b.total});
 var top=(Array.isArray(r.top3)&&r.top3.length?r.top3.map(function(id){return byId[id]}).filter(Boolean):priced).slice(0,3);
@@ -174,6 +215,7 @@ if(hy&&Array.isArray(hy.assignments)&&hy.assignments.length){var hs=(hy.stores||
 h+='<details data-k="hyb" class="store hyb"'+(rOpen('hyb',false)?' open':'')+'><summary><div class="sh"><span>Best 2-store split</span><span class="tr">'+ring(hy.clean_score)+money(hy.total)+'</span></div><div class="sa">'+esc(hs.join(' + '))+(num(hy.savings_vs_best_single)?' &middot; <b class="sv">saves '+money(hy.savings_vs_best_single)+'</b> '+esc(hy.savings_label||'vs. one store'):'')+'</div></summary>';
 (hy.stores||[]).forEach(function(id){var its=hy.assignments.filter(function(a){return a.store===id});if(!its.length)return;h+='<div class="hgrp"><b>'+esc(byId[id]?byId[id].name:id)+'</b><ul>'+its.map(function(a){return '<li>'+esc(a.item)+'</li>'}).join('')+'</ul></div>';});
 h+=sums(hy)+(hy.note?'<p class="notes">'+esc(hy.note)+'</p>':'')+'</details>';}
+h+=custBox(r,byId);
 if(top.length){h+='<h5 class="rh">Top '+top.length+' store'+(top.length>1?'s':'')+'</h5>';
 h+=top.map(function(s,ix){var ps=picks.filter(function(p){return p.store===s.id||p.store===s.name});
 var miss=Array.isArray(s.items_missing)?s.items_missing:[];
