@@ -85,6 +85,7 @@ the rubric). The rubric and its helpers live in `clean.py`.
 * **In-store swaps:** swap to a cleaner product when it has the lowest `final_price + $0.25 × (100 − clean_score)`.
   Each clean point is worth 25¢, so a cleaner pick wins unless the price gap is large.
 * **2-store split (John's rule: cleanest first, then price):**
+  0. Only pairs that cover the most core lines are considered, so a pair can't win by leaving items out.
   1. For every pair of stores (all four, including Sprouts and Target), take the cleanest available pick for each core line.
      Picks within 3 points of that line's best score count as tied, and the cheapest tied pick wins. A store missing an item
      leaves that line to its partner.
