@@ -1,5 +1,6 @@
 """Tiny Supabase REST helper shared by process_queue.py and shopping_queue.py (publishable key is public)."""
 import json, urllib.request, urllib.parse
+# Clean-food scoring rubric for shopping results lives in clean.py (clean_score 0-100, ingredient_flags).
 SB_URL = "https://fdxtpbaguqpnislglaur.supabase.co"
 SB_KEY = "sb_publishable_FTtpdWJD-TPLVZoFWhcbnQ_M5g0VRCa"
 

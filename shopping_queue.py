@@ -8,6 +8,7 @@
 """
 import json, sys
 from sb import sb, ids
+from clean import PENALTY  # clean-score rubric: see clean.py
 
 NUM = (int, float)
 def _num(v, nullable=True): return (v is None and nullable) or (isinstance(v, NUM) and not isinstance(v, bool))
@@ -25,6 +26,7 @@ def validate(r):
         for k in ("distance_mi", "subtotal", "coupon_savings", "total"):
             if not _num(s.get(k)): e.append(f"stores[{i}].{k} must be a number or null")
         if "items_found" in s and not _num(s["items_found"]): e.append(f"stores[{i}].items_found must be a number")
+        if "clean_score" in s and s["clean_score"] is not None and not (_num(s["clean_score"]) and 0 <= s["clean_score"] <= 100): e.append(f"stores[{i}].clean_score must be 0-100 or null")
         if "items_missing" in s and not isinstance(s["items_missing"], list): e.append(f"stores[{i}].items_missing must be an array")
     for i, p in enumerate(pk):
         if p.get("store") not in ids: e.append(f"picks[{i}].store '{p.get('store')}' is not a stores[].id")
@@ -33,6 +35,9 @@ def validate(r):
         for k in ("price", "final_price"):
             if not _num(p.get(k)): e.append(f"picks[{i}].{k} must be a number or null")
         if p.get("url") and not str(p["url"]).startswith(("http://", "https://")): e.append(f"picks[{i}].url must be http(s)")
+        if p.get("clean_score") is not None and not (_num(p["clean_score"]) and 0 <= p["clean_score"] <= 100): e.append(f"picks[{i}].clean_score must be 0-100 or null")
+        fl = p.get("ingredient_flags")
+        if fl is not None and (not isinstance(fl, list) or any(f not in PENALTY for f in fl)): e.append(f"picks[{i}].ingredient_flags must be a list of: " + ", ".join(PENALTY))
         c = p.get("coupon")
         if c is not None:
             if not isinstance(c, dict): e.append(f"picks[{i}].coupon must be an object or null"); continue
