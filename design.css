@@ -169,8 +169,8 @@ font:600 16px var(--font);color:var(--on-accent);background:color-mix(in srgb,va
 .res details.store>:not(summary){margin-left:16px;margin-right:16px}.res details.store>:last-child{margin-bottom:14px}
 .res .sh{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-weight:600;font-size:16px}
 .res .sh span:last-child{font-variant-numeric:tabular-nums}
-.res details.store summary .sh span:first-child::before{content:"";display:inline-block;width:7px;height:7px;margin:0 10px 2px 0;border:solid var(--ink-3);border-width:0 1.5px 1.5px 0;transform:rotate(-45deg);transition:transform .35s var(--ease)}
-.res details[open].store summary .sh span:first-child::before{transform:rotate(45deg) translate(-2px,-1px)}
+.res details.store summary .sh>span:first-child::before{content:"";display:inline-block;width:7px;height:7px;margin:0 10px 2px 0;border:solid var(--ink-3);border-width:0 1.5px 1.5px 0;transform:rotate(-45deg);transition:transform .35s var(--ease)}
+.res details[open].store summary .sh>span:first-child::before{transform:rotate(45deg) translate(-2px,-1px)}
 .res .sa{font-size:13px;color:var(--ink-2);margin-top:4px;padding-left:17px}
 .res .hyb{background:var(--ok-soft);box-shadow:inset 0 0 0 .5px color-mix(in srgb,var(--ok) 40%,transparent)}
 .res .hgrp{font-size:14px;margin-top:8px}.res .hgrp b{font-weight:600}.res .hgrp ul{margin:4px 0 0;padding-left:18px;color:var(--ink-2)}
