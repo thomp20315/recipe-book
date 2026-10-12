@@ -81,8 +81,16 @@ the rubric). The rubric and its helpers live in `clean.py`.
   Missing items get weight 0 and are listed in `items_missing`. Unverified labels are marked `ingredients_checked: false`.
 * **Ranking:** `value = total × (1 + 0.5 × (100 − store score)/100)` plus the cheapest other-store price of any missing item.
   Lower is better. A score of 80 adds 10% to the total.
-* **Per-item choice (hybrid split, in-store swaps):** lowest `final_price + $0.25 × (100 − clean_score)`. Each clean point
-  is worth 25¢, so a cleaner pick wins unless the price gap is large. Non-organic meat and eggs never beat an organic option on price alone.
+* **In-store swaps:** swap to a cleaner product when it has the lowest `final_price + $0.25 × (100 − clean_score)`.
+  Each clean point is worth 25¢, so a cleaner pick wins unless the price gap is large.
+* **2-store split (John's rule: cleanest first, then price):**
+  1. For every pair of stores (all four, including Sprouts and Target), take the cleanest available pick for each core line.
+     Picks within 3 points of that line's best score count as tied, and the cheapest tied pick wins. A store missing an item
+     leaves that line to its partner.
+  2. The pair's score is the mean of its chosen picks. Choose the pair with the highest score. Pairs within 2 points of the best
+     count as tied, and the lowest total wins.
+  3. Report the pair's score and total, plus `savings_vs_best_single` against the cleanest single store (highest store
+     `clean_score`), labelled with `savings_label`.
 
 The cart shows the score as a small ring on each store and on the 2-store split (green 85+, amber 65-84, red below 65).
 Each pick shows a score pill, its flags and any swap.

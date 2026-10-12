@@ -338,7 +338,7 @@ if(cheapest)h+='<div class="best">Cheapest overall: '+esc(cheapest.name)+' &mdas
 if(!window.rOpen){window._ro={};window.rOpen=function(k,d){return k in _ro?_ro[k]:d};document.addEventListener('toggle',function(e){var t=e.target;if(t.dataset&&t.dataset.k)_ro[t.dataset.k]=t.open},true);}
 var hy=r.hybrid;
 if(hy&&Array.isArray(hy.assignments)&&hy.assignments.length){var hs=(hy.stores||[]).map(function(id){return byId[id]?byId[id].name:id});
-h+='<details data-k="hyb" class="store hyb"'+(rOpen('hyb',false)?' open':'')+'><summary><div class="sh"><span>Best 2-store split</span><span class="tr">'+ring(hy.clean_score)+money(hy.total)+'</span></div><div class="sa">'+esc(hs.join(' + '))+(num(hy.savings_vs_best_single)?' &middot; <b class="sv">saves '+money(hy.savings_vs_best_single)+'</b> vs. one store':'')+'</div></summary>';
+h+='<details data-k="hyb" class="store hyb"'+(rOpen('hyb',false)?' open':'')+'><summary><div class="sh"><span>Best 2-store split</span><span class="tr">'+ring(hy.clean_score)+money(hy.total)+'</span></div><div class="sa">'+esc(hs.join(' + '))+(num(hy.savings_vs_best_single)?' &middot; <b class="sv">saves '+money(hy.savings_vs_best_single)+'</b> '+esc(hy.savings_label||'vs. one store'):'')+'</div></summary>';
 (hy.stores||[]).forEach(function(id){var its=hy.assignments.filter(function(a){return a.store===id});if(!its.length)return;h+='<div class="hgrp"><b>'+esc(byId[id]?byId[id].name:id)+'</b><ul>'+its.map(function(a){return '<li>'+esc(a.item)+'</li>'}).join('')+'</ul></div>';});
 h+=sums(hy)+(hy.note?'<p class="notes">'+esc(hy.note)+'</p>':'')+'</details>';}
 if(top.length){h+='<h5 class="rh">Top '+top.length+' store'+(top.length>1?'s':'')+'</h5>';
