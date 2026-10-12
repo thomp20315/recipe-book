@@ -198,3 +198,22 @@ font:600 16px var(--font);color:var(--on-accent);background:color-mix(in srgb,va
 .res .pick .fl{order:4;display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}.res .fl span{font-size:11px;line-height:18px;padding:0 7px;border-radius:9px;color:var(--ink-2);background:var(--surface-2)}.res .fl .uv{font-style:italic;color:var(--ink-3)}
 .res .pick .swp{order:4;display:flex;gap:6px;align-items:flex-start;margin-top:6px;font-size:12px;color:var(--ok)}.res .swp .ic{width:13px;height:13px;margin-top:2px;flex:none}
 @media (prefers-color-scheme:dark){.ring.a{--c:#e0a640}.res .cs.a{color:#e0a640}}
+
+/* Tags */
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.tags:empty{display:none}
+.chip{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 11px;border-radius:13px;border:0;background:var(--surface-2);color:var(--ink-2);font:500 12.5px/1 var(--font);letter-spacing:.01em;white-space:nowrap;-webkit-tap-highlight-color:transparent}
+button.chip{cursor:pointer;transition:transform .35s var(--ease),background-color .25s var(--ease),color .25s var(--ease)}button.chip:active{transform:scale(.95)}
+.chip.on{background:var(--accent);color:var(--on-accent)}
+.rtags{margin:-12px 0 28px}.rtags .chips{display:flex;flex-wrap:wrap;gap:8px}.rtags .chip{height:32px;padding:0 14px;font-size:14px;border-radius:16px}
+.rtags .chip.ed span{font-size:16px;line-height:1;color:var(--ink-3);margin-right:-3px}
+.rtags .chip.add{background:transparent;color:var(--accent);box-shadow:inset 0 0 0 .5px var(--line-2)}
+.tagmenu{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;padding:14px;border-radius:18px;background:var(--surface);box-shadow:var(--sh-1),inset 0 0 0 .5px var(--line)}
+.tagnew{display:flex;gap:8px;width:100%;margin-top:4px}.tagnew input{flex:1;min-width:0;height:36px;border:0;border-radius:18px;padding:0 14px;background:var(--surface-2);color:var(--ink);font:400 16px var(--font);outline:0}
+.tagnew input:focus{box-shadow:inset 0 0 0 1px var(--accent),0 0 0 4px var(--accent-soft)}
+.tagnew button{height:36px;padding:0 16px;border:0;border-radius:18px;background:var(--accent);color:var(--on-accent);font:600 14px var(--font);cursor:pointer}
+.tmsg{margin:10px 0 0;font-size:13px;color:var(--ink-3)}.tmsg:empty{display:none}
+.tagbar{display:flex;gap:8px;overflow-x:auto;padding:2px 20px 18px;margin:0 -20px;scrollbar-width:none;-webkit-overflow-scrolling:touch}.tagbar::-webkit-scrollbar{display:none}.tagbar[hidden]{display:none}
+.tagbar .chip{height:32px;padding:0 14px;font-size:14px;border-radius:16px;background:var(--glass-2);box-shadow:inset 0 0 0 .5px var(--line)}.tagbar .chip.on{background:var(--accent);box-shadow:none}
+body:has(.recipe:target) .tagbar{display:none!important}
+.tagpick{display:flex;flex-wrap:wrap;gap:8px}.tagpick button{height:34px;padding:0 14px;border:0;border-radius:17px;background:var(--surface);color:var(--ink-2);font:500 14px var(--font);box-shadow:inset 0 0 0 .5px var(--line-2);cursor:pointer}
+.tagpick button.on{background:var(--accent);color:var(--on-accent);box-shadow:none}.tagcust{margin-top:10px}

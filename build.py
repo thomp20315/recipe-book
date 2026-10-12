@@ -26,6 +26,9 @@ ICON = {
  "dish": '<path d="M3 15h18M5 15a7 7 0 0 1 14 0M12 6V4.5M4 18.5h16"/>',
 }
 def ic(n, extra=""): return f'<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"{extra}>{ICON[n]}</svg>'
+KNOWN_TAGS = ["Kids", "Breakfast", "Desserts", "Holiday Ideas", "Coffee", "Dinner", "Cocktails", "Soup", "Sides", "Crockpot Meals", "Lunch", "Sauces", "Dips", "Snacks", "Appetizers", "Lactation/PP", "Bread/Sourdough", "Ninja Creami", "Juice"]
+def tags_of(r): return [t for t in (r.get("tags") or []) if isinstance(t, str) and t.strip()]
+def chips(r): return ''.join(f'<span class="chip">{e(t)}</span>' for t in tags_of(r))
 RATE_ROWS = "".join(f'<div class="rrow" data-who="{w}"><span class="who">{lbl}</span><span class="stars">' + "".join(f'<button type="button" class="star" data-v="{v}" aria-label="{lbl} {v} star">'+ic("star")+'</button>' for v in range(1, 6)) + '</span></div>' for w, lbl in (("mom", "Mom"), ("dad", "Dad"), ("kids", "Kids")))
 RATE_JS = ("""<script>
 (function(){
@@ -55,9 +58,9 @@ def img(r, cls):
     return f'<div class="ph {cls}">{ic("dish")}</div>'
 import unicodedata
 def norm(s): return ''.join(c for c in unicodedata.normalize('NFD', s.lower()) if unicodedata.category(c) != 'Mn')
-def stext(r): return norm(' '.join([r.get('title') or '', ' '.join(r.get('ingredients') or []), r.get('sourceName') or '', r.get('source') or '', r.get('addedBy') or '']))
+def stext(r): return norm(' '.join([r.get('title') or '', ' '.join(r.get('ingredients') or []), r.get('sourceName') or '', r.get('source') or '', r.get('addedBy') or '', ' '.join(tags_of(r))]))
 def cmeta(r): return ' \u00b7 '.join(x for x in [f"Serves {r['servings']}" if r.get('servings') else '', str(r.get('totalTime') or r.get('cookTime') or '')] if x)
-cards = ''.join(f'<a class="card" data-s="{e(stext(r))}" href="#{e(r["id"])}">{img(r,"")}<span class="badge" data-rid="{e(r["id"])}" hidden></span><div class="ct"><h3>{e(r["title"])}</h3><p class="cm">{e(cmeta(r))}</p></div></a>' for r in R)
+cards = ''.join(f'<a class="card" data-s="{e(stext(r))}" data-t="{e('|' + '|'.join(norm(t) for t in tags_of(r)) + '|' if tags_of(r) else '')}" href="#{e(r["id"])}">{img(r,"")}<span class="badge" data-rid="{e(r["id"])}" hidden></span><div class="ct"><h3>{e(r["title"])}</h3><p class="cm">{e(cmeta(r))}</p><div class="tags" data-rid="{e(r["id"])}">{chips(r)}</div></div></a>' for r in R)
 pages = ''
 for r in R:
     meta = ''.join(f'<span><b>{k}</b> {e(str(r[f]))}</span>' for k, f in
@@ -66,18 +69,59 @@ for r in R:
     st = ''.join(f'<li>{e(s)}</li>' for s in r['steps'])
     pages += f'''<section class="recipe" id="{e(r["id"])}"><a class="back" href="#">All recipes</a>
 <div class="imgwrap">{img(r,"hero")}<span class="badge" data-rid="{e(r["id"])}" hidden></span></div><div class="rbody"><h2>{e(r["title"])}</h2><p class="desc">{e(r.get("description",""))}</p>
-<div class="meta">{meta}</div><button type="button" class="cartadd" data-rid="{e(r["id"])}">{ic("cart")}Add to Cart</button><div class="ratings" data-rid="{e(r["id"])}"><h4>Family ratings</h4>{RATE_ROWS}<p class="rmsg"></p></div><div class="cols"><div><h4>Ingredients</h4><ul>{ing}</ul></div>
+<div class="meta">{meta}</div><div class="rtags" data-rid="{e(r["id"])}"><div class="chips">{chips(r)}</div></div><button type="button" class="cartadd" data-rid="{e(r["id"])}">{ic("cart")}Add to Cart</button><div class="ratings" data-rid="{e(r["id"])}"><h4>Family ratings</h4>{RATE_ROWS}<p class="rmsg"></p></div><div class="cols"><div><h4>Ingredients</h4><ul>{ing}</ul></div>
 <div><h4>Steps</h4><ol>{st}</ol></div></div>
 <p class="src">Source: <a href="{e(r["source"])}" target="_blank" rel="noopener">{e(r.get("sourceName", r["source"]))}</a>{(' &middot; <a href="' + e(r["sourcePost"]) + '" target="_blank" rel="noopener">Original post</a>') if r.get("sourcePost") else ''}</p></div></section>'''
 SEARCH_JS = """<script>
 (function(){var q=document.getElementById('q'),x=document.getElementById('qx'),nm=document.getElementById('nomatch'),nmq=document.getElementById('nmq'),cards=[].slice.call(document.querySelectorAll('.card'));
 function norm(s){return s.toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'');}
-function run(){var raw=q.value,w=norm(raw).split(/\\s+/).filter(Boolean),n=0;
-cards.forEach(function(c){var ok=w.every(function(t){return c.dataset.s.indexOf(t)>=0});c.classList.toggle('hide',!ok);if(ok)n++;});
-x.hidden=!raw;nm.hidden=n>0;nmq.textContent=raw.trim();}
+function run(){var raw=q.value,w=norm(raw).split(/\\s+/).filter(Boolean),n=0,ft=window.rbTag?norm(window.rbTag):'';
+cards.forEach(function(c){var ok=w.every(function(t){return c.dataset.s.indexOf(t)>=0})&&(!ft||(' '+(c.dataset.t||'')+' ').indexOf('|'+ft+'|')>=0);c.classList.toggle('hide',!ok);if(ok)n++;});
+x.hidden=!raw;nm.hidden=n>0;nmq.textContent=(raw.trim()+(ft?(raw.trim()?' + ':'')+window.rbTag:''));}window.rbSearch=run;
 q.addEventListener('input',run);x.addEventListener('click',function(){q.value='';run();q.focus();});
 q.addEventListener('keydown',function(e){if(e.key==='Escape'){q.value='';run();}if(e.key==='Enter')q.blur();});run();})();
 </script>"""
+TAGS_JS = ("""<script>
+(function(){
+var KT=%s,BASE=%s,cur={},ok=true,$$=function(q){return [].slice.call(document.querySelectorAll(q))};
+function norm(s){return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');}
+function esc(t){var d=document.createElement('div');d.textContent=t;return d.innerHTML;}
+function canon(t){t=String(t||'').trim().replace(/ +/g,' ').slice(0,40);var k=KT.filter(function(x){return x.toLowerCase()===t.toLowerCase()})[0];return k||t;}
+function tags(rid){return cur[rid]||BASE[rid]||[];}
+var cards=$$('.card');cards.forEach(function(c){c.dataset.b=c.dataset.s.replace(/ [^ ]*$/,'')===c.dataset.s?c.dataset.s:c.dataset.s;});
+function renderAll(){var used={};
+$$('.tags').forEach(function(el){var t=tags(el.dataset.rid);t.forEach(function(x){used[x]=1});el.innerHTML=t.map(function(x){return '<span class="chip">'+esc(x)+'</span>'}).join('');});
+cards.forEach(function(c){var rid=c.getAttribute('href').slice(1),t=tags(rid),base=c.dataset.base||(c.dataset.base=c.dataset.s.replace(/\u0001.*$/,''));
+c.dataset.s=base+'\u0001 '+norm(t.join(' '))+(t.indexOf('Kids')>=0?' jack':'');c.dataset.t=t.length?'|'+t.map(norm).join('|')+'|':'';});
+$$('.rtags').forEach(renderEd);
+var bar=document.getElementById('tagBar'),list=KT.filter(function(x){return used[x]}).concat(Object.keys(used).filter(function(x){return KT.indexOf(x)<0}).sort());
+if(window.rbTag&&!used[window.rbTag])window.rbTag='';
+bar.hidden=!list.length;bar.innerHTML=list.map(function(x){return '<button type="button" class="chip'+(window.rbTag===x?' on':'')+'" data-t="'+esc(x)+'">'+esc(x)+'</button>'}).join('');
+if(window.rbSearch)window.rbSearch();}
+function renderEd(box){var rid=box.dataset.rid,t=tags(rid),open=box.classList.contains('adding');
+var h='<div class="chips">'+t.map(function(x){return '<button type="button" class="chip ed" data-t="'+esc(x)+'" aria-label="Remove tag '+esc(x)+'">'+esc(x)+'<span aria-hidden="true">&times;</span></button>'}).join('')+
+'<button type="button" class="chip add" aria-expanded="'+open+'">+ Tag</button></div>';
+if(open){h+='<div class="tagmenu">'+KT.filter(function(x){return t.indexOf(x)<0}).map(function(x){return '<button type="button" class="chip" data-add="'+esc(x)+'">'+esc(x)+'</button>'}).join('')+
+'<form class="tagnew"><input type="text" maxlength="40" placeholder="Custom tag" autocomplete="off" enterkeyhint="done"><button type="submit">Add</button></form></div>';}
+h+='<p class="tmsg"></p>';box.innerHTML=h;}
+function save(box,next){var rid=box.dataset.rid,prev=cur[rid];cur[rid]=next;renderAll();var m=box.querySelector('.tmsg');
+if(!ok){if(m)m.textContent='Tags need a one-time database setup (recipe_tags) before they can be saved.';cur[rid]=prev;setTimeout(renderAll,2500);return;}
+SB('recipe_tags?on_conflict=recipe_id',{method:'POST',prefer:'resolution=merge-duplicates,return=minimal',body:{recipe_id:rid,tags:next}})
+.then(function(){var m=box.querySelector('.tmsg');if(m){m.textContent='Saved \u2713';setTimeout(function(){if(m)m.textContent=''},1500);}})
+.catch(function(){if(prev===undefined)delete cur[rid];else cur[rid]=prev;renderAll();var m=box.querySelector('.tmsg');if(m)m.textContent='Couldn\u2019t save \u2014 check your connection and try again.';});}
+document.addEventListener('click',function(e){var b=e.target.closest('#tagBar .chip');if(b){window.rbTag=window.rbTag===b.dataset.t?'':b.dataset.t;renderAll();return;}
+var box=e.target.closest('.rtags');if(!box)return;var rid=box.dataset.rid,t=tags(rid).slice();
+if(e.target.closest('.chip.add')){box.classList.toggle('adding');renderEd(box);var i=box.querySelector('.tagnew input');return;}
+var rm=e.target.closest('.chip.ed');if(rm){save(box,t.filter(function(x){return x!==rm.dataset.t}));return;}
+var ad=e.target.closest('[data-add]');if(ad){box.classList.remove('adding');if(t.indexOf(ad.dataset.add)<0)t.push(ad.dataset.add);save(box,t);}});
+document.addEventListener('submit',function(e){var f=e.target.closest('.tagnew');if(!f)return;e.preventDefault();var box=f.closest('.rtags'),v=canon(f.querySelector('input').value),t=tags(box.dataset.rid).slice();
+if(!v)return;box.classList.remove('adding');if(t.map(norm).indexOf(norm(v))<0)t.push(v);save(box,t);});
+function load(){return SB('recipe_tags?select=recipe_id,tags').then(function(rows){ok=true;var d={};(rows||[]).forEach(function(r){d[r.recipe_id]=(r.tags||[]).filter(Boolean)});cur=d;renderAll();})
+.catch(function(er){if(/^40[04]/.test(er.message)||/recipe_tags/.test(er.message))ok=false;});}
+renderAll();load();setInterval(function(){if(!document.hidden&&!document.querySelector('.rtags.adding'))load()},30000);
+document.addEventListener('visibilitychange',function(){if(!document.hidden)load();});
+})();
+</script>""" % (json.dumps(KNOWN_TAGS), json.dumps({r["id"]: tags_of(r) for r in R if tags_of(r)}, ensure_ascii=False)))
 CART_HTML = """<div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="cart-bg" id="cartBg"><div class="cart" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
 <div class="cart-h"><h3 id="cartTitle">Shopping Cart</h3><button type="button" id="cartClose" aria-label="Close cart">"""+ic("close")+"""</button></div>
@@ -189,6 +233,8 @@ ADD_HTML = """<button class="fab" id="addBtn" type="button" aria-haspopup="dialo
 <button class="btn alt" id="pasteBtn" type="button">Paste</button></div><p class="err" id="err"></p>
 <label for="recNotes">Notes (optional)</label><textarea id="recNotes" placeholder="Anything to remember?"></textarea>
 <label>Added by (optional)</label><div class="who-pick" id="whoPick"><button type="button" data-w="Mom">Mom</button><button type="button" data-w="Dad">Dad</button><button type="button" data-w="Kids">Kids</button></div>
+<label>Tags (optional)</label><div class="tagpick" id="tagPick"></div>
+<div class="row tagcust"><input id="tagCust" type="text" placeholder="Custom tag" autocomplete="off" enterkeyhint="done" maxlength="40"><button class="btn alt" id="tagCustAdd" type="button">Add</button></div>
 <p class="ok" id="okMsg" hidden></p>
 <button class="btn go" id="sendBtn" type="submit">Send</button></form></div></div>
 <script>
@@ -197,6 +243,12 @@ var bg=document.getElementById('sheetBg'),link=document.getElementById('recLink'
 notes=document.getElementById('recNotes'),err=document.getElementById('err'),paste=document.getElementById('pasteBtn'),
 ok=document.getElementById('okMsg'),send=document.getElementById('sendBtn'),pick=document.getElementById('whoPick'),busy=false;
 var who='';try{who=localStorage.getItem('rb-addedBy')||''}catch(_){}
+var KT=""" + json.dumps(KNOWN_TAGS) + """,sel=[],tp=document.getElementById('tagPick'),tc=document.getElementById('tagCust');
+function tesc(t){var d=document.createElement('div');d.textContent=t;return d.innerHTML;}
+function showTags(){var all=KT.concat(sel.filter(function(t){return KT.indexOf(t)<0}));tp.innerHTML=all.map(function(t){return '<button type="button" class="'+(sel.indexOf(t)>=0?'on':'')+'" data-t="'+tesc(t)+'">'+tesc(t)+'</button>'}).join('');}
+tp.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;var t=b.dataset.t,i=sel.indexOf(t);if(i>=0)sel.splice(i,1);else sel.push(t);showTags();});
+function addCust(){var t=tc.value.trim().replace(/\\s+/g,' ');if(!t)return;var k=KT.filter(function(x){return x.toLowerCase()===t.toLowerCase()})[0]||t;if(sel.indexOf(k)<0)sel.push(k);tc.value='';showTags();}
+document.getElementById('tagCustAdd').addEventListener('click',addCust);tc.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();addCust();}});showTags();
 function showWho(){pick.querySelectorAll('button').forEach(function(b){b.classList.toggle('on',b.dataset.w===who)});}
 pick.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;who=(who===b.dataset.w)?'':b.dataset.w;try{localStorage.setItem('rb-addedBy',who)}catch(_){}showWho();});showWho();
 function open(){err.textContent='';ok.hidden=true;send.textContent='Send';bg.classList.add('open');link.focus();}
@@ -211,9 +263,9 @@ paste.addEventListener('click',function(){navigator.clipboard.readText().then(fu
 document.getElementById('addForm').addEventListener('submit',function(e){e.preventDefault();if(busy)return;var u=link.value.trim();err.textContent='';
 if(!u){err.textContent='Please paste a recipe link.';link.focus();return;}
 if(!/^https?:\\/\\//i.test(u)){err.textContent='The link should start with http:// or https://';link.focus();return;}
-var item={url:u,notes:notes.value.trim()};if(who)item.added_by=who;
+if(tc.value.trim())addCust();var item={url:u,notes:notes.value.trim()};if(who)item.added_by=who;if(sel.length)item.tags=sel.slice();
 busy=true;send.disabled=true;send.textContent='Adding\\u2026';
-SB('recipe_queue',{method:'POST',prefer:'return=minimal',body:item}).then(function(){ok.textContent='Added! \\u2713 It\\u2019ll appear in the book shortly';ok.hidden=false;send.textContent='Added \\u2713';
+SB('recipe_queue',{method:'POST',prefer:'return=minimal',body:item}).catch(function(er){if(!item.tags)throw er;var b2={url:item.url,notes:(item.notes?item.notes+'\\n':'')+'Tags: '+item.tags.join(', ')};if(item.added_by)b2.added_by=item.added_by;return SB('recipe_queue',{method:'POST',prefer:'return=minimal',body:b2});}).then(function(){sel=[];showTags();ok.textContent='Added! \\u2713 It\\u2019ll appear in the book shortly';ok.hidden=false;send.textContent='Added \\u2713';
 link.value='';notes.value='';setTimeout(function(){busy=false;send.disabled=false;close();},1800);})
 .catch(function(){busy=false;send.disabled=false;send.textContent='Retry';err.textContent='Couldn\\u2019t save \\u2014 check your connection and tap Retry.';});});
 })();
@@ -225,7 +277,7 @@ open('index.html', 'w').write(f'''<!doctype html><html><head><meta charset="utf-
 <meta name="apple-mobile-web-app-title" content="Recipes"><link rel="apple-touch-icon" href="icons/dog-icon-180.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/dog-icon-192.png">
 <title>Recipe Book</title><style>{open("design.css").read()}</style></head><body><header class="bar glass"><a class="barback" href="#">{ic("back")}Recipes</a><span class="barspace"></span><div class="search" role="search"><span class="sicon" aria-hidden="true">{ic("search")}</span><input id="q" type="search" placeholder="Search recipes, ingredients, who added&hellip;" aria-label="Search recipes" autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="search"><button type="button" id="qx" class="qx" aria-label="Clear search" hidden>{ic("close")}</button></div><button type="button" class="cartbtn" id="cartBtn" aria-label="Shopping cart">{ic("cart")}<span class="cnt" id="cartCnt" hidden>0</span></button></header>
-<main><div class="intro"><p class="eyebrow">The Thompson Family</p><h1>Recipe Book</h1><p class="sub">{len(R)} recipes</p></div><div class="grid">{cards}</div><p class="nomatch" id="nomatch" hidden>No recipes match &ldquo;<span id="nmq"></span>&rdquo;. Try another word.</p>{pages}</main>{SB_JS}{ADD_HTML}{RATE_JS}{SEARCH_JS}{CART_HTML}<script>
+<main><div class="intro"><p class="eyebrow">The Thompson Family</p><h1>Recipe Book</h1><p class="sub">{len(R)} recipes</p></div><div class="tagbar" id="tagBar" hidden></div><div class="grid">{cards}</div><p class="nomatch" id="nomatch" hidden>No recipes match &ldquo;<span id="nmq"></span>&rdquo;. Try another word.</p>{pages}</main>{SB_JS}{ADD_HTML}{RATE_JS}{SEARCH_JS}{TAGS_JS}{CART_HTML}<script>
 if('serviceWorker' in navigator){{navigator.serviceWorker.register('sw.js',{{updateViaCache:'none'}}).then(r=>{{r.update();document.addEventListener('visibilitychange',()=>{{if(!document.hidden)r.update()}})}});let R0=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{{if(R0)location.reload();R0=true}})}}
 window.addEventListener('hashchange',function(){{window.scrollTo(0,0)}});
 </script></body></html>''')

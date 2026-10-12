@@ -18,6 +18,7 @@ None of this is in recipes.json, so rebuilds never touch it, and the service wor
 | cart_items | Shared shopping cart (recipe_id or null for custom, text, checked, sort_order) |
 | settings | key `zip` = family zip code |
 | shopping_requests | "Let's go shopping" taps (zip, items jsonb, requested_by, status) |
+| recipe_tags | Shared tags per recipe (`tags` jsonb string array); editable in the app |
 | shopping_results | One result per request (`result` jsonb, shape below) |
 
 ### Add Recipe queue

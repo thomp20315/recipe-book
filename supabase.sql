@@ -62,8 +62,17 @@ create table if not exists public.shopping_results (
 );
 
 create index if not exists cart_items_sort_idx on public.cart_items (sort_order);
+alter table public.recipe_queue add column if not exists tags jsonb not null default '[]'::jsonb;
 create index if not exists recipe_queue_status_idx on public.recipe_queue (status, created_at);
 create index if not exists shopping_requests_status_idx on public.shopping_requests (status, created_at);
+-- Tags (shared, editable in the app)
+create table if not exists public.recipe_tags (
+  recipe_id   text primary key,
+  tags        jsonb not null default '[]'::jsonb,
+  updated_at  timestamptz not null default now()
+);
+create index if not exists recipe_tags_gin on public.recipe_tags using gin (tags);
+
 create index if not exists shopping_results_created_idx on public.shopping_results (created_at desc);
 
 -- Keep updated_at current
@@ -76,6 +85,9 @@ create trigger ratings_touch before update on public.ratings
 drop trigger if exists cart_items_touch on public.cart_items;
 create trigger cart_items_touch before update on public.cart_items
   for each row execute function public.touch_updated_at();
+drop trigger if exists recipe_tags_touch on public.recipe_tags;
+create trigger recipe_tags_touch before update on public.recipe_tags
+  for each row execute function public.touch_updated_at();
 drop trigger if exists settings_touch on public.settings;
 create trigger settings_touch before update on public.settings
   for each row execute function public.touch_updated_at();
@@ -84,7 +96,7 @@ create trigger settings_touch before update on public.settings
 do $$
 declare t text;
 begin
-  foreach t in array array['ratings','recipe_queue','cart_items','settings','shopping_requests','shopping_results'] loop
+  foreach t in array array['ratings','recipe_queue','cart_items','settings','shopping_requests','shopping_results','recipe_tags'] loop
     execute format('alter table public.%I enable row level security', t);
     execute format('grant select, insert, update, delete on public.%I to anon, authenticated', t);
     execute format('drop policy if exists family_all on public.%I', t);
@@ -100,7 +112,7 @@ do $$
 declare t text;
 begin
   if exists (select 1 from pg_publication where pubname = 'supabase_realtime') then
-    foreach t in array array['ratings','recipe_queue','cart_items','settings','shopping_requests','shopping_results'] loop
+    foreach t in array array['ratings','recipe_queue','cart_items','settings','shopping_requests','shopping_results','recipe_tags'] loop
       if not exists (select 1 from pg_publication_tables
                      where pubname = 'supabase_realtime' and schemaname = 'public' and tablename = t) then
         execute format('alter publication supabase_realtime add table public.%I', t);
