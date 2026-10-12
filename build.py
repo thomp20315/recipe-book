@@ -68,7 +68,7 @@ for r in R:
 <div class="imgwrap">{img(r,"hero")}<span class="badge" data-rid="{e(r["id"])}" hidden></span></div><div class="rbody"><h2>{e(r["title"])}</h2><p class="desc">{e(r.get("description",""))}</p>
 <div class="meta">{meta}</div><button type="button" class="cartadd" data-rid="{e(r["id"])}">{ic("cart")}Add to Cart</button><div class="ratings" data-rid="{e(r["id"])}"><h4>Family ratings</h4>{RATE_ROWS}<p class="rmsg"></p></div><div class="cols"><div><h4>Ingredients</h4><ul>{ing}</ul></div>
 <div><h4>Steps</h4><ol>{st}</ol></div></div>
-<p class="src">Source: <a href="{e(r["source"])}" target="_blank" rel="noopener">{e(r.get("sourceName", r["source"]))}</a></p></div></section>'''
+<p class="src">Source: <a href="{e(r["source"])}" target="_blank" rel="noopener">{e(r.get("sourceName", r["source"]))}</a>{(' &middot; <a href="' + e(r["sourcePost"]) + '" target="_blank" rel="noopener">Original post</a>') if r.get("sourcePost") else ''}</p></div></section>'''
 SEARCH_JS = """<script>
 (function(){var q=document.getElementById('q'),x=document.getElementById('qx'),nm=document.getElementById('nomatch'),nmq=document.getElementById('nmq'),cards=[].slice.call(document.querySelectorAll('.card'));
 function norm(s){return s.toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'');}
