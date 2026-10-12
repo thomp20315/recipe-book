@@ -25,7 +25,7 @@ None of this is in recipes.json, so rebuilds never touch it, and the service wor
 - `python3 process_queue.py` prints pending rows as JSON.
 - `python3 process_queue.py --done <id> [<id> ...]` marks them done (`--reject` for duplicates).
 
-Flow: list, add each recipe to recipes.json + images/, `python3 build.py`, commit, push, then `--done` the ids.
+Flow: list, add each recipe to recipes.json + images/, run `--done <queue_id>=<recipe_id>` (copies the submitted tags into recipes.json and marks it done), then `python3 build.py`, commit, push.
 
 ### Shopping
 - `python3 shopping_queue.py list` prints pending shopping requests.
