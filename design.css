@@ -100,14 +100,15 @@ font:600 16px var(--font);color:var(--on-accent);background:color-mix(in srgb,va
 .open>.sheet,.open>.cart{transform:none}
 @media(min-width:700px){.sheet-bg,.cart-bg{align-items:center}.sheet,.cart{border-radius:var(--r-sheet);transform:translateY(24px) scale(.98)}}
 .sheet::before,.cart::before{content:"";display:block;width:36px;height:5px;border-radius:3px;background:var(--line-2);margin:8px auto 0}
-.sheet{position:relative;padding:8px 24px calc(24px + env(safe-area-inset-bottom))}
+.sheet{position:relative;padding:8px 0 0;max-height:92dvh;display:flex;flex-direction:column}.sheet>h3{padding:0 24px;margin-bottom:8px!important}
+#addForm{display:flex;flex-direction:column;min-height:0;flex:1}.sbody{overflow-y:auto;padding:0 24px 8px;flex:1;min-height:0;-webkit-overflow-scrolling:touch}.sfoot{padding:8px 24px calc(16px + env(safe-area-inset-bottom))}.sfoot .go{margin-top:0}
 .sheet h3{margin:16px 0 24px;font:700 28px/1.15 var(--font);letter-spacing:-.02em}
 .sheet label{display:block;margin:20px 0 8px;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
 .row{display:flex;gap:8px}
 .sheet input,.sheet textarea,.cust input,.ziprow input,.it .ed{width:100%;font:400 16px var(--font);color:var(--ink);background:var(--surface);border:0;border-radius:14px;padding:13px 16px;box-shadow:inset 0 0 0 .5px var(--line-2);outline:0;-webkit-appearance:none;appearance:none;transition:box-shadow .25s var(--ease)}
 .sheet input:focus,.sheet textarea:focus,.cust input:focus,.ziprow input:focus,.it .ed:focus{box-shadow:inset 0 0 0 1px var(--accent),0 0 0 4px var(--accent-soft)}
 .sheet input::placeholder,.sheet textarea::placeholder,.cust input::placeholder,.ziprow input::placeholder{color:var(--ink-3)}
-.sheet textarea{min-height:88px;resize:vertical}
+.sheet textarea{min-height:48px;resize:none;overflow:hidden;line-height:1.4}
 .btn{border:0;border-radius:14px;padding:0 18px;height:48px;font:600 16px var(--font);cursor:pointer}
 .btn.alt{background:var(--surface-2);color:var(--ink);flex:none}.btn.go{display:block;width:100%;margin-top:24px;height:52px;border-radius:26px;background:var(--accent);color:var(--on-accent)}.btn.go:disabled{opacity:.6}
 .sheet .err{color:var(--err);font-size:14px;min-height:1.2em;margin:8px 0 0}
@@ -248,3 +249,15 @@ body:has(.recipe:target) .tagbar{display:none!important}
 .res .cs1.working i,.res .cs1.queued i{animation:cpulse 1.4s var(--ease) infinite}.res .cs1.done i{background:var(--ok)}.res .cs1.partial i{background:#d9a441}.res .cs1.failed i{background:#d0584a}
 .res .cs1 b{color:var(--ink);font-weight:600}.res .cs1 a{margin-left:auto;color:var(--ink);font-weight:500;text-decoration:none;border-bottom:.5px solid var(--line-2)}
 @keyframes cpulse{50%{opacity:.25}}
+
+/* add-sheet: quiet tags row */
+.addnote{display:block;margin:4px 0 0;padding:6px 0;border:0;background:none;color:var(--accent);font:500 15px var(--font);cursor:pointer}.addnote[hidden],.notewrap[hidden]{display:none}
+.tagrow{display:flex;align-items:center;gap:12px;width:100%;margin-top:20px;min-height:52px;padding:10px 16px;border:0;border-radius:14px;background:var(--surface);box-shadow:inset 0 0 0 .5px var(--line-2);color:var(--ink);font:500 16px var(--font);text-align:left;cursor:pointer}
+.tagrow .tl{flex:none}.tagrow .tv{flex:1;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:4px;color:var(--ink-3);font-size:15px;overflow:hidden}
+.tagrow .mini{padding:3px 10px;border-radius:11px;background:var(--accent-soft);color:var(--ink);font-size:13px}
+.tagrow .chev{flex:none;width:8px;height:8px;border-right:1.5px solid var(--ink-3);border-bottom:1.5px solid var(--ink-3);transform:rotate(-45deg);transition:transform .35s var(--ease)}
+.tagrow[aria-expanded="true"] .chev{transform:rotate(45deg)}
+.tagpanel{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .4s var(--ease),opacity .3s var(--ease)}.tagpanel.open{grid-template-rows:1fr;opacity:1}
+.tpin{overflow:hidden;min-height:0}.tagpanel.open .tpin{padding-top:12px}
+.tmore,.tdone{border:0;background:none;color:var(--accent);font:500 15px var(--font);padding:10px 0;cursor:pointer}.tmore{display:block}#tagPick2[hidden]{display:none}
+.tdone{display:block;margin-left:auto;font-weight:600}

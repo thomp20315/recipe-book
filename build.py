@@ -292,15 +292,17 @@ setInterval(function(){if(!document.hidden&&$('cartBg').classList.contains('open
 ADD_HTML = """<button class="fab" id="addBtn" type="button" aria-haspopup="dialog">"""+ic("plus")+"""Add Recipe</button>
 <div class="sheet-bg" id="sheetBg"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
 <button class="x" id="closeSheet" type="button" aria-label="Close">"""+ic("close")+"""</button><h3 id="sheetTitle">Add a recipe</h3>
-<form id="addForm" novalidate><label for="recLink">Recipe link</label><div class="row">
+<form id="addForm" novalidate><div class="sbody"><label for="recLink">Recipe link</label><div class="row">
 <input id="recLink" type="url" autofocus inputmode="url" autocomplete="off" autocapitalize="off" placeholder="https://..." required>
 <button class="btn alt" id="pasteBtn" type="button">Paste</button></div><p class="err" id="err"></p>
-<label for="recNotes">Notes (optional)</label><textarea id="recNotes" placeholder="Anything to remember?"></textarea>
-<label>Added by (optional)</label><div class="who-pick" id="whoPick"><button type="button" data-w="Mom">Mom</button><button type="button" data-w="Dad">Dad</button><button type="button" data-w="Kids">Kids</button></div>
-<label>Tags (optional)</label><div class="tagpick" id="tagPick"></div>
+<button type="button" class="addnote" id="addNote">+ Add note</button><div class="notewrap" id="noteWrap" hidden><label for="recNotes">Note</label><textarea id="recNotes" rows="1" placeholder="Anything to remember?"></textarea></div>
+<label>Added by</label><div class="who-pick" id="whoPick"><button type="button" data-w="Mom">Mom</button><button type="button" data-w="Dad">Dad</button><button type="button" data-w="Kids">Kids</button></div>
+<button type="button" class="tagrow" id="tagRow" aria-expanded="false" aria-controls="tagPanel"><span class="tl">Tags</span><span class="tv" id="tagVal">None</span><span class="chev" aria-hidden="true"></span></button>
+<div class="tagpanel" id="tagPanel"><div class="tpin"><div class="tagpick" id="tagPick"></div>
+<button type="button" class="tmore" id="tagMore">More</button><div class="tagpick" id="tagPick2" hidden></div>
 <div class="row tagcust"><input id="tagCust" type="text" placeholder="Custom tag" autocomplete="off" enterkeyhint="done" maxlength="40"><button class="btn alt" id="tagCustAdd" type="button">Add</button></div>
-<p class="ok" id="okMsg" hidden></p>
-<button class="btn go" id="sendBtn" type="submit">Send</button></form></div></div>
+<button type="button" class="tdone" id="tagDone">Done</button></div></div>
+<p class="ok" id="okMsg" hidden></p></div><div class="sfoot"><button class="btn go" id="sendBtn" type="submit">Send</button></div></form></div></div>
 <script>
 (function(){
 var bg=document.getElementById('sheetBg'),link=document.getElementById('recLink'),
@@ -309,13 +311,29 @@ ok=document.getElementById('okMsg'),send=document.getElementById('sendBtn'),pick
 var who='';try{who=localStorage.getItem('rb-addedBy')||''}catch(_){}
 var KT=""" + json.dumps(KNOWN_TAGS) + """,sel=[],tp=document.getElementById('tagPick'),tc=document.getElementById('tagCust');
 function tesc(t){var d=document.createElement('div');d.textContent=t;return d.innerHTML;}
-function showTags(){var all=KT.concat(sel.filter(function(t){return KT.indexOf(t)<0}));tp.innerHTML=all.map(function(t){return '<button type="button" class="'+(sel.indexOf(t)>=0?'on':'')+'" data-t="'+tesc(t)+'">'+tesc(t)+'</button>'}).join('');}
+var tp2=document.getElementById('tagPick2'),tmore=document.getElementById('tagMore'),trow=document.getElementById('tagRow'),tpan=document.getElementById('tagPanel'),tval=document.getElementById('tagVal');
+var cnt={};try{document.querySelectorAll('.card .tags').forEach(function(el){el.textContent;});}catch(_){}
+document.querySelectorAll('.card[data-t]').forEach(function(c){(c.dataset.t||'').split('|').forEach(function(x){if(x)cnt[x]=(cnt[x]||0)+1})});
+function nk(t){return t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')}
+var TOP=KT.slice().sort(function(a,b){return (cnt[nk(b)]||0)-(cnt[nk(a)]||0)}).slice(0,6);
+function btn(t){return '<button type="button" class="'+(sel.indexOf(t)>=0?'on':'')+'" data-t="'+tesc(t)+'">'+tesc(t)+'</button>'}
+function showTags(){var top=TOP.concat(sel.filter(function(t){return TOP.indexOf(t)<0&&KT.indexOf(t)<0}));tp.innerHTML=top.map(btn).join('');
+tp2.innerHTML=KT.filter(function(t){return TOP.indexOf(t)<0}).map(btn).join('');
+tval.innerHTML=sel.length?sel.map(function(t){return '<span class="mini">'+tesc(t)+'</span>'}).join(''):'None';}
+function setT(o){tpan.classList.toggle('open',o);trow.setAttribute('aria-expanded',o);if(o)setTimeout(function(){trow.scrollIntoView({block:'start',behavior:'smooth'})},60);}
+trow.addEventListener('click',function(){setT(!tpan.classList.contains('open'))});
+document.getElementById('tagDone').addEventListener('click',function(){if(tc.value.trim())addCust();setT(false)});
+tmore.addEventListener('click',function(){var h=!tp2.hidden;tp2.hidden=h;tmore.textContent=h?'More':'Fewer'});
+tp2.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;var t=b.dataset.t,i=sel.indexOf(t);if(i>=0)sel.splice(i,1);else sel.push(t);showTags();});
+var nw=document.getElementById('noteWrap'),an=document.getElementById('addNote');
+an.addEventListener('click',function(){nw.hidden=false;an.hidden=true;notes.focus()});
+function grow(){notes.style.height='auto';notes.style.height=Math.min(notes.scrollHeight,160)+'px'}notes.addEventListener('input',grow);
 tp.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;var t=b.dataset.t,i=sel.indexOf(t);if(i>=0)sel.splice(i,1);else sel.push(t);showTags();});
 function addCust(){var t=tc.value.trim().replace(/\\s+/g,' ');if(!t)return;var k=KT.filter(function(x){return x.toLowerCase()===t.toLowerCase()})[0]||t;if(sel.indexOf(k)<0)sel.push(k);tc.value='';showTags();}
 document.getElementById('tagCustAdd').addEventListener('click',addCust);tc.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();addCust();}});showTags();
 function showWho(){pick.querySelectorAll('button').forEach(function(b){b.classList.toggle('on',b.dataset.w===who)});}
 pick.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;who=(who===b.dataset.w)?'':b.dataset.w;try{localStorage.setItem('rb-addedBy',who)}catch(_){}showWho();});showWho();
-function open(){err.textContent='';ok.hidden=true;send.textContent='Send';bg.classList.add('open');link.focus();}
+function open(){err.textContent='';setT(false);if(!notes.value){nw.hidden=true;an.hidden=false;}ok.hidden=true;send.textContent='Send';bg.classList.add('open');link.focus();}
 function close(){bg.classList.remove('open');}
 document.getElementById('addBtn').addEventListener('click',open);
 document.getElementById('closeSheet').addEventListener('click',close);
