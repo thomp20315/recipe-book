@@ -96,3 +96,6 @@ the rubric). The rubric and its helpers live in `clean.py`.
 
 The cart shows the score as a small ring on each store and on the 2-store split (green 85+, amber 65-84, red below 65).
 Each pick shows a score pill, its flags and any swap.
+
+## Send to cart
+Each store result, the best 2-store split and the custom split have a **Send to cart** button. It inserts one `cart_requests` row per store (status queued, then working, then done, partial or failed). A browser worker adds the items to the family store carts and updates the rows with `cart_queue.py`. It never checks out. When a row is done, the app shows an "Open <store> cart" link.

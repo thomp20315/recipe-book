@@ -121,5 +121,34 @@ begin
   end if;
 end $$;
 
+-- Send to cart (picks -> family store carts; never checks out)
+create table if not exists public.cart_requests (
+  id                   bigint generated always as identity primary key,
+  created_at           timestamptz not null default now(),
+  updated_at           timestamptz not null default now(),
+  shopping_request_id  bigint references public.shopping_requests(id) on delete set null,
+  result_id            bigint references public.shopping_results(id) on delete set null,
+  source               text,            -- which button: store:<id> | hyb | cust:<a>+<b>
+  store                text not null,   -- stores[].id
+  store_name           text,
+  items                jsonb not null default '[]'::jsonb,  -- [{name, product, url, qty, price}]
+  status               text not null default 'queued' check (status in ('queued','working','done','partial','failed')),
+  added                jsonb not null default '[]'::jsonb,
+  failed               jsonb not null default '[]'::jsonb,
+  note                 text
+);
+create index if not exists cart_requests_status_idx on public.cart_requests (status, created_at);
+create index if not exists cart_requests_result_idx on public.cart_requests (result_id, created_at desc);
+drop trigger if exists cart_requests_touch on public.cart_requests;
+create trigger cart_requests_touch before update on public.cart_requests for each row execute function public.touch_updated_at();
+alter table public.cart_requests enable row level security;
+grant select, insert, update, delete on public.cart_requests to anon, authenticated;
+drop policy if exists family_all on public.cart_requests;
+create policy family_all on public.cart_requests for all to anon, authenticated using (true) with check (true);
+grant usage, select on all sequences in schema public to anon, authenticated;
+do $$ begin
+  if exists (select 1 from pg_publication where pubname='supabase_realtime') and not exists (select 1 from pg_publication_tables where pubname='supabase_realtime' and tablename='cart_requests') then
+    alter publication supabase_realtime add table public.cart_requests; end if; end $$;
+
 -- Refresh the REST API schema cache
 notify pgrst, 'reload schema';

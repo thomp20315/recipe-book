@@ -238,3 +238,13 @@ body:has(.recipe:target) .tagbar{display:none!important}
 @media (prefers-reduced-motion:reduce){.schip,.slot{transition:none}}
 .slot em{font-style:normal;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .bubble{min-width:0}
+
+/* Send to cart */
+.res .send{margin-top:12px;display:flex;flex-direction:column;gap:8px}
+.res .sendbtn{align-self:flex-start;font:600 14px var(--font);height:36px;padding:0 18px;border-radius:18px;border:0;background:var(--ink);color:var(--bg);cursor:pointer;transition:transform .35s var(--ease),opacity .25s}
+.res .sendbtn:active{transform:scale(.97)}.res .sendbtn:disabled{opacity:.45;cursor:default}
+.res .cst:empty{display:none}.res .cs1{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-2);flex-wrap:wrap}
+.res .cs1 i{width:7px;height:7px;border-radius:50%;background:var(--ink-3);flex:none}
+.res .cs1.working i,.res .cs1.queued i{animation:cpulse 1.4s var(--ease) infinite}.res .cs1.done i{background:var(--ok)}.res .cs1.partial i{background:#d9a441}.res .cs1.failed i{background:#d0584a}
+.res .cs1 b{color:var(--ink);font-weight:600}.res .cs1 a{margin-left:auto;color:var(--ink);font-weight:500;text-decoration:none;border-bottom:.5px solid var(--line-2)}
+@keyframes cpulse{50%{opacity:.25}}
