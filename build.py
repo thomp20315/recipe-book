@@ -29,21 +29,21 @@ def ic(n, extra=""): return f'<svg class="ic" viewBox="0 0 24 24" aria-hidden="t
 KNOWN_TAGS = ["Kids", "Breakfast", "Desserts", "Holiday Ideas", "Coffee", "Dinner", "Cocktails", "Soup", "Sides", "Crockpot Meals", "Lunch", "Sauces", "Dips", "Snacks", "Appetizers", "Lactation/PP", "Bread/Sourdough", "Ninja Creami", "Juice"]
 def tags_of(r): return [t for t in (r.get("tags") or []) if isinstance(t, str) and t.strip()]
 def chips(r): return ''.join(f'<span class="chip">{e(t)}</span>' for t in tags_of(r))
-RATE_ROWS = "".join(f'<div class="rrow" data-who="{w}"><span class="who">{lbl}</span><span class="stars">' + "".join(f'<button type="button" class="star" data-v="{v}" aria-label="{lbl} {v} star">'+ic("star")+'</button>' for v in range(1, 6)) + '</span></div>' for w, lbl in (("mom", "Mom"), ("dad", "Dad"), ("kids", "Kids")))
+RATE_ROWS = "".join(f'<div class="rrow" data-who="{w}"><div class="rhead"><span class="who">{lbl}</span><span class="rval"></span></div><div class="pills" role="group" aria-label="{lbl} score">' + "".join(f'<button type="button" class="pill" data-v="{v}" aria-label="{lbl} {v} out of 10">{v}</button>' for v in range(1, 11)) + '</div></div>' for w, lbl in (("mom", "Mom"), ("dad", "Dad"), ("kids", "Kids")))
 RATE_JS = ("""<script>
 (function(){
 var data={},busy=false,STAR=%s;
-function avg(r){var v=['mom','dad','kids'].map(function(k){return r&&r[k]}).filter(function(x){return x>=1&&x<=5});return v.length?(v.reduce(function(a,b){return a+b},0)/v.length):null;}
-function render(){document.querySelectorAll('.badge').forEach(function(b){var a=avg(data[b.dataset.rid]);if(a){b.innerHTML=STAR+a.toFixed(1);b.hidden=false}else b.hidden=true;});
+function avg(r){var v=['mom','dad','kids'].map(function(k){return r&&r[k]}).filter(function(x){return x>=1&&x<=10});return v.length?(v.reduce(function(a,b){return a+b},0)/v.length):null;}
+function render(){document.querySelectorAll('.badge').forEach(function(b){var a=avg(data[b.dataset.rid]);if(a){b.textContent=a.toFixed(1)+'/10';b.hidden=false}else b.hidden=true;});
 document.querySelectorAll('.ratings').forEach(function(box){var r=data[box.dataset.rid]||{};box.querySelectorAll('.rrow').forEach(function(row){var v=r[row.dataset.who]||0;
-row.querySelectorAll('.star').forEach(function(s){s.classList.toggle('on',+s.dataset.v<=v)});});});}
-function load(){return SB('ratings?select=recipe_id,person,stars').then(function(rows){var d={};rows.forEach(function(x){(d[x.recipe_id]=d[x.recipe_id]||{})[x.person]=x.stars});data=d;render();});}
+row.querySelectorAll('.pill').forEach(function(s){s.classList.toggle('on',+s.dataset.v===v);s.classList.toggle('lit',+s.dataset.v<v)});var rv=row.querySelector('.rval');if(rv)rv.textContent=v?v+'/10':'\u2014';});});}
+function load(){return SB('ratings?select=recipe_id,person,score').then(function(rows){var d={};rows.forEach(function(x){(d[x.recipe_id]=d[x.recipe_id]||{})[x.person]=x.score});data=d;render();});}
 function setv(rid,who,v){data[rid]=data[rid]||{};if(v)data[rid][who]=v;else{delete data[rid][who];if(!Object.keys(data[rid]).length)delete data[rid];}}
 function msg(box,t){var m=box.querySelector('.rmsg');if(m)m.textContent=t;}
-document.addEventListener('click',function(e){var s=e.target.closest('.star');if(!s)return;e.preventDefault();var box=s.closest('.ratings'),rid=box.dataset.rid,who=s.closest('.rrow').dataset.who,
+document.addEventListener('click',function(e){var s=e.target.closest('.pill');if(!s)return;e.preventDefault();var box=s.closest('.ratings'),rid=box.dataset.rid,who=s.closest('.rrow').dataset.who,
 cur=(data[rid]||{})[who]||0,v=+s.dataset.v;if(v&&v===cur)v=0;
 if(busy)return;busy=true;var prev=JSON.parse(JSON.stringify(data));setv(rid,who,v);render();msg(box,'Saving\\u2026');
-var q=v?SB('ratings?on_conflict=recipe_id,person',{method:'POST',prefer:'resolution=merge-duplicates,return=minimal',body:{recipe_id:rid,person:who,stars:v}})
+var q=v?SB('ratings?on_conflict=recipe_id,person',{method:'POST',prefer:'resolution=merge-duplicates,return=minimal',body:{recipe_id:rid,person:who,score:v}})
 :SB('ratings?recipe_id=eq.'+encodeURIComponent(rid)+'&person=eq.'+who,{method:'DELETE'});
 q.then(function(){msg(box,v?'Saved \\u2713':'Cleared \\u2713');busy=false;load().catch(function(){});}).catch(function(){data=prev;render();msg(box,'Could not save \\u2014 check your connection and try again.');})
 .then(function(){busy=false;});});

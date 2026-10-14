@@ -152,3 +152,20 @@ do $$ begin
 
 -- Refresh the REST API schema cache
 notify pgrst, 'reload schema';
+
+-- 2026-10-13: 1-10 score. Legacy 'stars' (1-5) kept so old app versions keep saving correctly;
+-- a trigger derives score=stars*2 when only stars is sent, and stars=ceil(score/2) otherwise.
+alter table public.ratings add column if not exists score smallint check (score between 1 and 10);
+update public.ratings set score = stars*2 where score is null;
+create or replace function public.ratings_sync_score() returns trigger language plpgsql as $$
+begin
+  if new.score is null or (tg_op='UPDATE' and new.score is not distinct from old.score and new.stars is distinct from old.stars) then
+    new.score := new.stars*2;
+  end if;
+  new.stars := greatest(1, least(5, ceil(new.score/2.0)::int));
+  return new;
+end $$;
+drop trigger if exists ratings_sync_score on public.ratings;
+create trigger ratings_sync_score before insert or update on public.ratings for each row execute function public.ratings_sync_score();
+alter table public.ratings alter column score set not null;
+notify pgrst, 'reload schema';

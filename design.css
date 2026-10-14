@@ -261,3 +261,12 @@ body:has(.recipe:target) .tagbar{display:none!important}
 .tpin{overflow:hidden;min-height:0}.tagpanel.open .tpin{padding-top:12px}
 .tmore,.tdone{border:0;background:none;color:var(--accent);font:500 15px var(--font);padding:10px 0;cursor:pointer}.tmore{display:block}#tagPick2[hidden]{display:none}
 .tdone{display:block;margin-left:auto;font-weight:600}
+
+/* 1-10 score */
+.rrow{display:block}.rhead{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.rval{font:600 15px/1 var(--font);font-variant-numeric:tabular-nums;color:var(--ink,#1d1d1f);opacity:.85}
+.pills{display:grid;grid-template-columns:repeat(10,1fr);gap:4px}
+.pill{height:36px;min-width:0;padding:0;border:0;border-radius:10px;background:var(--line);color:inherit;opacity:.75;font:500 14px/1 var(--font);font-variant-numeric:tabular-nums;cursor:pointer;transition:transform .3s var(--ease),background-color .25s var(--ease),opacity .25s var(--ease)}
+.pill.lit{background:color-mix(in srgb,var(--star) 22%,transparent);opacity:1}
+.pill.on{background:var(--star);color:#fff;opacity:1;font-weight:600}
+.pill:active{transform:scale(.88)}
