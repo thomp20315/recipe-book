@@ -25170,5 +25170,79 @@
   "tags": [
    "Desserts"
   ]
+ },
+ {
+  "id": "no-bake-protein-bars",
+  "title": "No-Bake Protein Bars",
+  "description": "Chewy, one-bowl no-bake bars with oats, Rice Bubbles and peanut butter, sweetened with honey and finished with a dark chocolate drizzle. Recipe by Ash from @ashleigh.cooks.",
+  "servings": "12 big bars (or 24 mini)",
+  "prepTime": "15 min",
+  "cookTime": null,
+  "totalTime": "15 min + overnight freeze",
+  "image": "images/no-bake-protein-bars.jpg",
+  "source": "https://unrefinednutrients.com.au/blogs/news/no-bake-protein-bars",
+  "sourceName": "unrefinednutrients.com.au",
+  "ingredients": [
+   "2 cups rolled oats (blitzed into a 'flour')",
+   "1 cup Rice Bubbles (crisp rice cereal)",
+   "1/2 cup Unrefined Nutrients Kids Immune Protein (Vanilla Vanguard or Cacao Cavalry)",
+   "1/3 cup flaxmeal (linseed meal)",
+   "1/4 tsp salt (optional)",
+   "1 cup natural peanut butter, runny (or sunflower seed butter)",
+   "1/3 cup honey",
+   "1 1/2 tbsp (30 ml) coconut oil, melted",
+   "1 tsp vanilla extract",
+   "30 g dark chocolate, for drizzling"
+  ],
+  "steps": [
+   "Spread a little butter over a 20 cm (8 in) square tin so the baking paper sticks, then line it with baking paper overhanging all sides.",
+   "Pulse the oats in a food processor a few times, until broken down and flour-like.",
+   "In a large bowl, combine the ground oats, Rice Bubbles, protein powder, flaxmeal and salt.",
+   "Add the peanut butter (or sunflower seed butter), honey, coconut oil and vanilla, and mix well with a spoon or your hands. It should feel like a thick, slightly sticky cookie dough and hold together when squeezed. If it's crumbly, add water 1 to 2 tsp at a time.",
+   "Press the mixture firmly and evenly into the tin, first with your hands and then again with a spatula.",
+   "Melt the chocolate in the microwave in 20-second bursts, stirring between each, until smooth (3 to 4 bursts).",
+   "Drizzle the chocolate over the slab while it's still warm and runny.",
+   "Freeze overnight (uncovered is fine).",
+   "The next day, rest the slab on the bench for 5 to 10 minutes, then lift it out using the baking paper. Cut into 12 large or 24 mini bars with a clean warm knife.",
+   "Storage: keep in an airtight container in the fridge for up to 5 days, or freeze for up to 3 months with baking paper between layers. For lunchboxes, pack them straight from the freezer."
+  ],
+  "tags": [
+   "Kids"
+  ]
+ },
+ {
+  "id": "brothy-curry-beef-rice-bowls",
+  "title": "Brothy Curry Beef & Rice Bowls",
+  "description": "Cozy, dairy-free brothy bowls: ground beef with zucchini and spinach over rice in a red curry coconut broth.",
+  "servings": null,
+  "prepTime": null,
+  "cookTime": null,
+  "totalTime": null,
+  "image": "images/brothy-curry-beef-rice-bowls.jpg",
+  "source": "https://www.instagram.com/reel/Dd5Gn82OGaR/",
+  "sourceName": "Instagram (@snackingemily)",
+  "ingredients": [
+   "Curry broth: 3 cloves garlic, minced",
+   "Curry broth: 1 shallot, finely chopped",
+   "Curry broth: 3 tbsp red curry paste",
+   "Curry broth: 1 (15 oz) can light coconut milk",
+   "Curry broth: 1 cup chicken or beef broth",
+   "Curry broth: 3 tbsp low-sodium soy sauce",
+   "Oil, for cooking",
+   "1 lb ground beef",
+   "1 tbsp low-sodium soy sauce (for the beef)",
+   "1 zucchini, sliced",
+   "2 cups chopped spinach",
+   "2 cups cooked rice",
+   "Garnish: squeeze of lime, chili crisp, sesame seeds"
+  ],
+  "steps": [
+   "Heat a drizzle of oil in a saucepan. Add the garlic and shallot and sauté until fragrant. Add the red curry paste and toast for 1 minute. Add the coconut milk, broth and soy sauce. Bring to a boil, then reduce to a simmer.",
+   "Brown the ground beef in a skillet with 1 tbsp low-sodium soy sauce. Add the sliced zucchini and cook until softened. Add the chopped spinach and cook a few more minutes until wilted.",
+   "Add rice to a bowl, top with the beef and vegetables, and pour the curry broth over everything. Garnish with lime, chili crisp and sesame seeds."
+  ],
+  "tags": [
+   "Dinner"
+  ]
  }
 ]
