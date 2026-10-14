@@ -270,3 +270,13 @@ body:has(.recipe:target) .tagbar{display:none!important}
 .pill.lit{background:color-mix(in srgb,var(--star) 22%,transparent);opacity:1}
 .pill.on{background:var(--star);color:#fff;opacity:1;font-weight:600}
 .pill:active{transform:scale(.88)}
+
+.frow{display:flex;align-items:flex-start;gap:8px}.frow .tagbar{flex:1;min-width:0;margin:0 -20px 0 0;padding-left:0}
+.rchip{flex:none;height:32px;padding:0 12px 0 14px;font-size:14px;border-radius:16px;background:var(--glass-2);box-shadow:inset 0 0 0 .5px var(--line);display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.rchip.on{background:var(--accent);color:var(--on-accent);box-shadow:none}.rchip .chev{width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:translateY(-2px) rotate(45deg);opacity:.6;transition:transform .2s}
+.rchip[aria-expanded=true] .chev{transform:translateY(1px) rotate(225deg)}
+.rpick{margin:0 0 18px;padding:14px 14px 16px;border-radius:18px;background:var(--glass-2);box-shadow:inset 0 0 0 .5px var(--line),0 8px 30px rgba(0,0,0,.06)}.rpick[hidden]{display:none}
+.rpl{margin:10px 2px 6px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;opacity:.55}.rpl:first-child{margin-top:0}
+.rseg{display:flex;flex-wrap:wrap;gap:6px}.rseg button{height:30px;padding:0 12px;border:0;border-radius:15px;font:inherit;font-size:14px;color:inherit;background:transparent;box-shadow:inset 0 0 0 .5px var(--line);cursor:pointer}
+.rseg button.on{background:var(--accent);color:var(--on-accent);box-shadow:none}
+body:has(.recipe:target) .frow,body:has(.recipe:target) .rpick{display:none!important}

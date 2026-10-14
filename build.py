@@ -37,8 +37,8 @@ function avg(r){var v=['mom','dad','kids'].map(function(k){return r&&r[k]}).filt
 function render(){document.querySelectorAll('.badge').forEach(function(b){var a=avg(data[b.dataset.rid]);if(a){b.textContent=a.toFixed(1)+'/10';b.hidden=false}else b.hidden=true;});
 document.querySelectorAll('.ratings').forEach(function(box){var r=data[box.dataset.rid]||{};box.querySelectorAll('.rrow').forEach(function(row){var v=r[row.dataset.who]||0;
 row.querySelectorAll('.pill').forEach(function(s){s.classList.toggle('on',+s.dataset.v===v);s.classList.toggle('lit',+s.dataset.v<v)});var rv=row.querySelector('.rval');if(rv)rv.textContent=v?v+'/10':'\u2014';});});}
-function load(){return SB('ratings?select=recipe_id,person,score').then(function(rows){var d={};rows.forEach(function(x){(d[x.recipe_id]=d[x.recipe_id]||{})[x.person]=x.score});data=d;render();});}
-function setv(rid,who,v){data[rid]=data[rid]||{};if(v)data[rid][who]=v;else{delete data[rid][who];if(!Object.keys(data[rid]).length)delete data[rid];}}
+function load(){return SB('ratings?select=recipe_id,person,score').then(function(rows){var d={};rows.forEach(function(x){(d[x.recipe_id]=d[x.recipe_id]||{})[x.person]=x.score});data=d;window.rbRatings=d;render();if(window.rbSearch)window.rbSearch();});}
+function setv(rid,who,v){window.rbRatings=data;setTimeout(function(){if(window.rbSearch)window.rbSearch()},0);data[rid]=data[rid]||{};if(v)data[rid][who]=v;else{delete data[rid][who];if(!Object.keys(data[rid]).length)delete data[rid];}}
 function msg(box,t){var m=box.querySelector('.rmsg');if(m)m.textContent=t;}
 document.addEventListener('click',function(e){var s=e.target.closest('.pill');if(!s)return;e.preventDefault();var box=s.closest('.ratings'),rid=box.dataset.rid,who=s.closest('.rrow').dataset.who,
 cur=(data[rid]||{})[who]||0,v=+s.dataset.v;if(v&&v===cur)v=0;
@@ -76,10 +76,29 @@ SEARCH_JS = """<script>
 (function(){var q=document.getElementById('q'),x=document.getElementById('qx'),nm=document.getElementById('nomatch'),nmq=document.getElementById('nmq'),cards=[].slice.call(document.querySelectorAll('.card'));
 function norm(s){return s.toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'');}
 function run(){var raw=q.value,w=norm(raw).split(/\\s+/).filter(Boolean),n=0,ft=window.rbTag?norm(window.rbTag):'';
-cards.forEach(function(c){var ok=w.every(function(t){return c.dataset.s.indexOf(t)>=0})&&(!ft||(' '+(c.dataset.t||'')+' ').indexOf('|'+ft+'|')>=0);c.classList.toggle('hide',!ok);if(ok)n++;});
-x.hidden=!raw;nm.hidden=n>0;nmq.textContent=(raw.trim()+(ft?(raw.trim()?' + ':'')+window.rbTag:''));}window.rbSearch=run;
+cards.forEach(function(c){var ok=w.every(function(t){return c.dataset.s.indexOf(t)>=0})&&(!ft||(' '+(c.dataset.t||'')+' ').indexOf('|'+ft+'|')>=0)&&(!window.rbRateOk||window.rbRateOk(c));c.classList.toggle('hide',!ok);if(ok)n++;});
+x.hidden=!raw;var rl=window.rbRateLbl?window.rbRateLbl():'',sub=document.querySelector('.intro .sub');if(sub)sub.textContent=(n===cards.length?n:n+' of '+cards.length)+' recipes';if(window.rbSort)window.rbSort(cards);
+nm.hidden=n>0;if(!n&&rl&&!raw.trim()&&!ft){nm.textContent=rl==='Unrated'?'Every recipe has been rated.':'No recipes rated '+rl+' yet.';}else{nm.innerHTML='No recipes match \u201c<span id="nmq"></span>\u201d. Try another word.';nmq=document.getElementById('nmq');nmq.textContent=[raw.trim(),ft?window.rbTag:'',rl?'Rating '+rl:''].filter(Boolean).join(' + ');}}window.rbSearch=run;
 q.addEventListener('input',run);x.addEventListener('click',function(){q.value='';run();q.focus();});
 q.addEventListener('keydown',function(e){if(e.key==='Escape'){q.value='';run();}if(e.key==='Enter')q.blur();});run();})();
+</script>"""
+RATEF_JS = """<script>
+(function(){var K='rbRateF',st={min:'',who:'all',sort:''};try{st=Object.assign(st,JSON.parse(sessionStorage.getItem(K)||'{}'))}catch(e){}
+var chip=document.getElementById('rateChip'),pk=document.getElementById('ratePick'),grid=document.querySelector('.grid'),W={all:'Everyone',mom:'Mom',dad:'Dad',kids:'Kids'};
+function sc(rid){var r=(window.rbRatings||{})[rid];if(!r)return null;var ks=st.who==='all'?['mom','dad','kids']:[st.who],v=ks.map(function(k){return r[k]}).filter(function(x){return x>=1&&x<=10});return v.length?v.reduce(function(a,b){return a+b},0)/v.length:null;}
+function rid(c){return c.getAttribute('href').slice(1)}
+window.rbRateOk=function(c){if(!st.min)return true;var a=sc(rid(c));return st.min==='u'?a==null:(a!=null&&a>=+st.min);};
+window.rbRateLbl=function(){if(!st.min)return '';var w=st.who==='all'?'':W[st.who]+' ';return st.min==='u'?(w?w+'unrated':'Unrated'):w+st.min+'+';};
+window.rbSort=function(cards){cards.forEach(function(c,i){if(c.dataset.i==null)c.dataset.i=i});var o=cards.slice();if(st.sort==='top')o.sort(function(a,b){var x=sc(rid(a)),y=sc(rid(b));return (y==null?-1:y)-(x==null?-1:x)||a.dataset.i-b.dataset.i});else o.sort(function(a,b){return a.dataset.i-b.dataset.i});
+var cur=[].slice.call(grid.children);if(o.some(function(c,i){return cur[i]!==c}))o.forEach(function(c){grid.appendChild(c)});};
+function seg(k,opts){return '<div class="rseg" role="radiogroup">'+opts.map(function(o){return '<button type="button" role="radio" aria-checked="'+(st[k]===o[0])+'" class="'+(st[k]===o[0]?'on':'')+'" data-k="'+k+'" data-v="'+o[0]+'">'+o[1]+'</button>'}).join('')+'</div>';}
+function paint(){var l=window.rbRateLbl();chip.innerHTML=(l?'Rating '+l:'Rating')+(st.sort==='top'?' \\u00b7 Top':'')+'<span class="chev" aria-hidden="true"></span>';chip.classList.toggle('on',!!(l||st.sort));chip.setAttribute('aria-expanded',!pk.hidden);
+pk.innerHTML='<p class="rpl">Minimum score</p>'+seg('min',[['','Any'],['9','9+'],['8','8+'],['7','7+'],['6','6+'],['u','Unrated']])+'<p class="rpl">Rated by</p>'+seg('who',[['all','Everyone'],['mom','Mom'],['dad','Dad'],['kids','Kids']])+'<p class="rpl">Sort</p>'+seg('sort',[['','Book order'],['top','Highest rated']]);
+try{sessionStorage.setItem(K,JSON.stringify(st))}catch(e){}if(window.rbSearch)window.rbSearch();}
+chip.addEventListener('click',function(){pk.hidden=!pk.hidden;paint();});
+pk.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;st[b.dataset.k]=b.dataset.v;paint();});
+document.addEventListener('click',function(e){if(!pk.hidden&&e.target.isConnected&&!e.target.closest('#ratePick,#rateChip')){pk.hidden=true;paint();}});
+paint();})();
 </script>"""
 TAGS_JS = ("""<script>
 (function(){
@@ -359,7 +378,7 @@ open('index.html', 'w').write(f'''<!doctype html><html><head><meta charset="utf-
 <meta name="apple-mobile-web-app-title" content="Recipes"><link rel="apple-touch-icon" href="icons/dog-icon-180.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/dog-icon-192.png">
 <title>Recipe Book</title><style>{open("design.css").read()}</style></head><body><header class="bar glass"><a class="barback" href="#">{ic("back")}Recipes</a><span class="barspace"></span><div class="search" role="search"><span class="sicon" aria-hidden="true">{ic("search")}</span><input id="q" type="search" placeholder="Search recipes, ingredients, who added&hellip;" aria-label="Search recipes" autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="search"><button type="button" id="qx" class="qx" aria-label="Clear search" hidden>{ic("close")}</button></div><button type="button" class="cartbtn" id="cartBtn" aria-label="Shopping cart">{ic("cart")}<span class="cnt" id="cartCnt" hidden>0</span></button></header>
-<main><div class="intro"><p class="eyebrow">The Thompson Family</p><h1>Recipe Book</h1><p class="sub">{len(R)} recipes</p></div><div class="tagbar" id="tagBar" hidden></div><div class="grid">{cards}</div><p class="nomatch" id="nomatch" hidden>No recipes match &ldquo;<span id="nmq"></span>&rdquo;. Try another word.</p>{pages}</main>{SB_JS}{ADD_HTML}{RATE_JS}{SEARCH_JS}{TAGS_JS}{CART_HTML}<script>
+<main><div class="intro"><p class="eyebrow">The Thompson Family</p><h1>Recipe Book</h1><p class="sub">{len(R)} recipes</p></div><div class="frow"><button type="button" class="chip rchip" id="rateChip" aria-haspopup="true" aria-controls="ratePick" aria-expanded="false">Rating</button><div class="tagbar" id="tagBar" hidden></div></div><div class="rpick" id="ratePick" hidden></div><div class="grid">{cards}</div><p class="nomatch" id="nomatch" hidden>No recipes match &ldquo;<span id="nmq"></span>&rdquo;. Try another word.</p>{pages}</main>{SB_JS}{ADD_HTML}{RATE_JS}{SEARCH_JS}{RATEF_JS}{TAGS_JS}{CART_HTML}<script>
 if('serviceWorker' in navigator){{navigator.serviceWorker.register('sw.js',{{updateViaCache:'none'}}).then(r=>{{r.update();document.addEventListener('visibilitychange',()=>{{if(!document.hidden)r.update()}})}});let R0=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{{if(R0)location.reload();R0=true}})}}
 window.addEventListener('hashchange',function(){{window.scrollTo(0,0)}});
 </script></body></html>''')
