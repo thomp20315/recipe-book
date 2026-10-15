@@ -25244,5 +25244,42 @@
   "tags": [
    "Dinner"
   ]
+ },
+ {
+  "id": "lazy-beef-ragu-gnocchi",
+  "title": "Lazy Beef Ragu Gnocchi",
+  "description": "A dump-and-go crockpot dinner: chuck roast slow-cooked in marinara until it shreds, then finished with shelf-stable gnocchi and Parmesan right in the pot.",
+  "servings": null,
+  "prepTime": null,
+  "cookTime": null,
+  "totalTime": null,
+  "image": "images/lazy-beef-ragu-gnocchi.jpg",
+  "source": "https://www.instagram.com/reel/DeaOevGSJNv/",
+  "sourceName": "Instagram (@itsmesaramartinez)",
+  "ingredients": [
+   "1 boneless chuck roast (2–2½ lb)",
+   "1 regular jar marinara",
+   "3 tablespoons tomato paste",
+   "2 small beef bouillon cubes",
+   "2 tablespoons balsamic vinegar",
+   "1 cup shredded carrots",
+   "¾ teaspoon dried thyme",
+   "Black pepper",
+   "2 packages shelf-stable potato gnocchi",
+   "1 cup grated Parmesan, plus more for the top",
+   "Fresh basil"
+  ],
+  "steps": [
+   "Add the roast, marinara, tomato paste, bouillon cubes, balsamic, carrots, thyme, and pepper to a crockpot. Stir the sauce around the roast.",
+   "Cover and cook on HIGH for 5–6 hours, until the beef pulls apart easily with a fork.",
+   "Shred the beef right in the pot and stir.",
+   "Add both packages of gnocchi, stir, and press them into the sauce. Cover and cook on HIGH for 30–40 minutes, stirring once halfway.",
+   "Stir in 1 cup of Parmesan.",
+   "Scoop into bowls and top with more Parmesan and torn basil."
+  ],
+  "tags": [
+   "Dinner",
+   "Crockpot Meals"
+  ]
  }
 ]
