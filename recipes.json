@@ -25940,5 +25940,36 @@
    "Crockpot Meals"
   ],
   "added": "2026-10-15T01:11:48.658Z"
+ },
+ {
+  "id": "pumpkin-pie-bites",
+  "title": "Pumpkin Pie Bites",
+  "description": "No-bake pumpkin oat bites with cinnamon, pumpkin pie spice, and dark chocolate chips. Mix, roll into eight balls, and chill — a simple fall snack (macros about 86 cal / 3g protein per bite).",
+  "servings": "8 bites",
+  "prepTime": "5 minutes",
+  "cookTime": null,
+  "totalTime": "1 hour 5 minutes (includes chill)",
+  "image": "images/pumpkin-pie-bites.jpg",
+  "source": "https://www.instagram.com/reel/Defl975Rwrz/",
+  "sourceName": "Instagram (@mattwalterfit)",
+  "ingredients": [
+   "1 cup (80g) old-fashioned rolled oats",
+   "1/2 cup (122g) pumpkin purée",
+   "1 tbsp (20g) honey",
+   "1 tsp (3g) ground cinnamon",
+   "1 tsp (3g) pumpkin pie spice",
+   "1/4 cup (42g) Lily's dark chocolate chips (or cleaner dark chocolate chips)",
+   "Pinch of salt",
+   "Optional: scoop of protein powder"
+  ],
+  "steps": [
+   "Add all ingredients to a bowl and mix until fully combined. For a softer texture, pulse the oats or the whole mix in a food processor; toasting the oats first also works.",
+   "Using a tablespoon, portion the mixture into 8 balls.",
+   "Refrigerate for 1 hour to chill, then enjoy."
+  ],
+  "tags": [
+   "Snacks"
+  ],
+  "added": "2026-10-15T13:17:20.093Z"
  }
 ]
