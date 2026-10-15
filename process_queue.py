@@ -9,9 +9,9 @@
 
 Tags come from the row's `tags` array, or from a "Tags: a, b" line in notes (fallback used
 before the tags column existed). Known tags are normalized to their canonical spelling; custom
-tags are kept. Run `python3 build.py` afterwards.
+tags are kept. --done/--tags also stamp `added` (UTC ISO now) if missing. Run `python3 build.py` afterwards.
 """
-import json, re, sys
+import datetime, json, re, sys
 from sb import sb, ids
 
 KNOWN = ["Kids", "Breakfast", "Desserts", "Holiday Ideas", "Coffee", "Dinner", "Cocktails", "Soup", "Sides", "Crockpot Meals",
@@ -37,10 +37,12 @@ def copy_tags(qid, rid):
     R = json.load(open("recipes.json"))
     r = next((x for x in R if x["id"] == rid), None)
     if not r: sys.exit(f"recipe {rid} not in recipes.json")
+    if not r.get("added"):  # newest-first ordering on the home page
+        r["added"] = datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="milliseconds").replace("+00:00", "Z")
     if t:
         cur = r.get("tags") or []
         r["tags"] = cur + [x for x in t if x not in cur]
-        json.dump(R, open("recipes.json", "w"), indent=1, ensure_ascii=False)
+    json.dump(R, open("recipes.json", "w"), indent=1, ensure_ascii=False)
     return t
 
 a = sys.argv[1:]

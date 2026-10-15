@@ -1,5 +1,5 @@
 # Recipe Book
-To add a recipe: save its photo to `images/<id>.jpg`, then add an object to `recipes.json` with these fields: id, title, description, servings, prepTime, cookTime, totalTime (leave any of those empty/null if unknown), image, source, sourceName, ingredients[], steps[].
+To add a recipe: save its photo to `images/<id>.jpg`, then add an object to `recipes.json` with these fields: id, title, description, servings, prepTime, cookTime, totalTime (leave any of those empty/null if unknown), image, source, sourceName, ingredients[], steps[], added (ISO UTC timestamp of when it was added, e.g. 2026-10-15T13:20:00.000Z; the home page lists newest first). `process_queue.py --done` stamps `added` automatically if it's missing.
 Then run `python3 build.py` and redeploy (`npx surge . <domain>`).
 
 ## App (PWA)

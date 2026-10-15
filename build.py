@@ -2,6 +2,7 @@
 """Builds index.html from recipes.json. Run: python3 build.py"""
 import json, html
 R = json.load(open('recipes.json'))
+R = [r for _, r in sorted(enumerate(R), key=lambda p: (p[1].get('added') or '', p[0]), reverse=True)]  # newest first
 e = html.escape
 SB_URL = "https://fdxtpbaguqpnislglaur.supabase.co"
 SB_KEY = "sb_publishable_FTtpdWJD-TPLVZoFWhcbnQ_M5g0VRCa"  # public publishable key (safe in the site; RLS policies in supabase.sql)
@@ -60,7 +61,7 @@ import unicodedata
 def norm(s): return ''.join(c for c in unicodedata.normalize('NFD', s.lower()) if unicodedata.category(c) != 'Mn')
 def stext(r): return norm(' '.join([r.get('title') or '', ' '.join(r.get('ingredients') or []), r.get('sourceName') or '', r.get('source') or '', r.get('addedBy') or '', ' '.join(tags_of(r))]))
 def cmeta(r): return ' \u00b7 '.join(x for x in [f"Serves {r['servings']}" if r.get('servings') else '', str(r.get('totalTime') or r.get('cookTime') or '')] if x)
-cards = ''.join(f'<a class="card" data-s="{e(stext(r))}" data-t="{e('|' + '|'.join(norm(t) for t in tags_of(r)) + '|' if tags_of(r) else '')}" href="#{e(r["id"])}">{img(r,"")}<span class="badge" data-rid="{e(r["id"])}" hidden></span><div class="ct"><h3>{e(r["title"])}</h3><p class="cm">{e(cmeta(r))}</p><div class="tags" data-rid="{e(r["id"])}">{chips(r)}</div></div></a>' for r in R)
+cards = ''.join(f'<a class="card" data-a="{e(r['title'].lower())}" data-s="{e(stext(r))}" data-t="{e('|' + '|'.join(norm(t) for t in tags_of(r)) + '|' if tags_of(r) else '')}" href="#{e(r["id"])}">{img(r,"")}<span class="badge" data-rid="{e(r["id"])}" hidden></span><div class="ct"><h3>{e(r["title"])}</h3><p class="cm">{e(cmeta(r))}</p><div class="tags" data-rid="{e(r["id"])}">{chips(r)}</div></div></a>' for r in R)
 pages = ''
 for r in R:
     meta = ''.join(f'<span><b>{k}</b> {e(str(r[f]))}</span>' for k, f in
@@ -89,11 +90,11 @@ function sc(rid){var r=(window.rbRatings||{})[rid];if(!r)return null;var ks=st.w
 function rid(c){return c.getAttribute('href').slice(1)}
 window.rbRateOk=function(c){if(!st.min)return true;var a=sc(rid(c));return st.min==='u'?a==null:(a!=null&&a>=+st.min);};
 window.rbRateLbl=function(){if(!st.min)return '';var w=st.who==='all'?'':W[st.who]+' ';return st.min==='u'?(w?w+'unrated':'Unrated'):w+st.min+'+';};
-window.rbSort=function(cards){cards.forEach(function(c,i){if(c.dataset.i==null)c.dataset.i=i});var o=cards.slice();if(st.sort==='top')o.sort(function(a,b){var x=sc(rid(a)),y=sc(rid(b));return (y==null?-1:y)-(x==null?-1:x)||a.dataset.i-b.dataset.i});else o.sort(function(a,b){return a.dataset.i-b.dataset.i});
+window.rbSort=function(cards){cards.forEach(function(c,i){if(c.dataset.i==null)c.dataset.i=i});var o=cards.slice();if(st.sort==='top')o.sort(function(a,b){var x=sc(rid(a)),y=sc(rid(b));return (y==null?-1:y)-(x==null?-1:x)||a.dataset.i-b.dataset.i});else if(st.sort==='az')o.sort(function(a,b){return a.dataset.a.replace(/^[^a-z0-9]+/,'').localeCompare(b.dataset.a.replace(/^[^a-z0-9]+/,''))||a.dataset.i-b.dataset.i});else o.sort(function(a,b){return a.dataset.i-b.dataset.i});
 var cur=[].slice.call(grid.children);if(o.some(function(c,i){return cur[i]!==c}))o.forEach(function(c){grid.appendChild(c)});};
 function seg(k,opts){return '<div class="rseg" role="radiogroup">'+opts.map(function(o){return '<button type="button" role="radio" aria-checked="'+(st[k]===o[0])+'" class="'+(st[k]===o[0]?'on':'')+'" data-k="'+k+'" data-v="'+o[0]+'">'+o[1]+'</button>'}).join('')+'</div>';}
-function paint(){var l=window.rbRateLbl();chip.innerHTML=(l?'Rating '+l:'Rating')+(st.sort==='top'?' \\u00b7 Top':'')+'<span class="chev" aria-hidden="true"></span>';chip.classList.toggle('on',!!(l||st.sort));chip.setAttribute('aria-expanded',!pk.hidden);
-pk.innerHTML='<p class="rpl">Minimum score</p>'+seg('min',[['','Any'],['9','9+'],['8','8+'],['7','7+'],['6','6+'],['u','Unrated']])+'<p class="rpl">Rated by</p>'+seg('who',[['all','Everyone'],['mom','Mom'],['dad','Dad'],['kids','Kids']])+'<p class="rpl">Sort</p>'+seg('sort',[['','Book order'],['top','Highest rated']]);
+function paint(){var l=window.rbRateLbl();chip.innerHTML=(l?'Rating '+l:'Rating')+(st.sort==='top'?' \\u00b7 Top':st.sort==='az'?' \\u00b7 A\\u2013Z':'')+'<span class="chev" aria-hidden="true"></span>';chip.classList.toggle('on',!!(l||st.sort));chip.setAttribute('aria-expanded',!pk.hidden);
+pk.innerHTML='<p class="rpl">Minimum score</p>'+seg('min',[['','Any'],['9','9+'],['8','8+'],['7','7+'],['6','6+'],['u','Unrated']])+'<p class="rpl">Rated by</p>'+seg('who',[['all','Everyone'],['mom','Mom'],['dad','Dad'],['kids','Kids']])+'<p class="rpl">Sort</p>'+seg('sort',[['','Newest'],['top','Highest rated'],['az','A\\u2013Z']]);
 try{sessionStorage.setItem(K,JSON.stringify(st))}catch(e){}if(window.rbSearch)window.rbSearch();}
 chip.addEventListener('click',function(){pk.hidden=!pk.hidden;paint();});
 pk.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;st[b.dataset.k]=b.dataset.v;paint();});
