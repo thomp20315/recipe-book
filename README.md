@@ -27,6 +27,10 @@ None of this is in recipes.json, so rebuilds never touch it, and the service wor
 
 Flow: list, add each recipe to recipes.json + images/, run `--done <queue_id>=<recipe_id>` (copies the submitted tags into recipes.json and marks it done), then `python3 build.py`, commit, push.
 
+**Recipe photo (video sources):** for Instagram / TikTok / YouTube / Facebook links (and ReciMe imports whose original post is a video), don't use the cover image directly — it is often the creator's face. Save the cover to a temp file, then run:
+`/workspace/venv/bin/python pick_food_frame.py "<video_url>" images/<id>.jpg --cover /tmp/cover.jpg --title "<Recipe title>" --min 0.6`
+It downloads the video (yt-dlp), samples 1 fps, and scores each frame with CLIP (food prompts minus person/other prompts, plus title match, sharpness and a small late-frame bonus); the cover is only kept if it beats every frame. Exit 0 = saved; 2 = nothing scored ≥ 0.6 (then try the web page's og:image/in-post images with `pick_food_frame.py --score --title "<title>" img1 img2 …`, and fall back to the cover); 1 = download failed (use the cover). Output is JPEG, long side ≤ 1200, q85. Setup if the venv is missing: `python3 -m venv /workspace/venv && /workspace/venv/bin/pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu && /workspace/venv/bin/pip install open_clip_torch "opencv-python-headless<5" pillow`.
+
 ### Shopping
 - `python3 shopping_queue.py list` prints pending shopping requests.
 - `python3 shopping_queue.py mark <id> processing|done|failed`
