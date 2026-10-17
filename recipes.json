@@ -26012,5 +26012,45 @@
   "tags": [
    "Dinner"
   ]
+ },
+ {
+  "id": "slow-braised-honey-garlic-beef",
+  "title": "Slow Braised Honey Garlic Beef",
+  "description": "Seared chuck roast slow-cooked in a sweet-savory honey garlic soy sauce until it melts in your mouth, served over white rice with chili oil, sesame seeds and green onion.",
+  "servings": null,
+  "prepTime": null,
+  "cookTime": "4 hours (low)",
+  "totalTime": null,
+  "image": "images/slow-braised-honey-garlic-beef.jpg",
+  "source": "https://www.instagram.com/reel/Dee2hSwRfYx/",
+  "sourceName": "Instagram (@bisongainz)",
+  "ingredients": [
+   "2.5 lbs chuck roast",
+   "Salt and pepper, to season",
+   "Sauce:",
+   "1/4 cup soy sauce",
+   "1 tbsp hoisin sauce",
+   "3 tbsp rice wine vinegar",
+   "2 tbsp honey",
+   "1/4 cup brown sugar",
+   "10 cloves garlic, diced",
+   "1 tbsp chili flakes",
+   "1 cup beef broth",
+   "To serve:",
+   "White rice",
+   "Chili oil",
+   "Sesame seeds",
+   "Green onion, sliced"
+  ],
+  "steps": [
+   "Pat dry your chuck roast and season with salt and pepper. Sear it for a nice golden crust.",
+   "Whisk all the sauce ingredients together in a bowl.",
+   "Put the chuck roast in the slow cooker, pour the sauce over it, and cook on low for 4 hours, or until tender and it pulls apart.",
+   "Serve over white rice, top with chili oil, sesame seeds and green onion, and enjoy!"
+  ],
+  "added": "2026-10-17T18:38:47.000Z",
+  "tags": [
+   "Dinner"
+  ]
  }
 ]
