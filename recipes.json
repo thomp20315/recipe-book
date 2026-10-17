@@ -26052,5 +26052,40 @@
   "tags": [
    "Dinner"
   ]
+ },
+ {
+  "id": "pcos-brownie-balls",
+  "title": "PCOS Brownie Balls",
+  "description": "Fudgy almond flour brownie bites sweetened with maple syrup, dipped in sugar-free chocolate and topped with sprinkles and flaky salt.",
+  "servings": "6 large balls",
+  "prepTime": "15 mins",
+  "cookTime": null,
+  "totalTime": "55 mins",
+  "image": "images/pcos-brownie-balls.jpg",
+  "source": "https://www.instagram.com/reel/DeZWsveR89I/",
+  "sourceName": "Instagram (@thewomensdietitian)",
+  "ingredients": [
+   "1/4 cup cocoa powder",
+   "1/4 cup maple syrup",
+   "1/4 cup runny cashew butter (almond or peanut butter work too)",
+   "1 cup almond flour",
+   "Pinch of sea salt",
+   "Pinch of cinnamon",
+   "3 tbsp whole milk (plus more if needed)",
+   "1 cup sugar-free chocolate chips",
+   "1 tsp coconut oil (optional, for smoother melted chocolate)",
+   "Sprinkles and flaky sea salt, for topping"
+  ],
+  "steps": [
+   "In a medium bowl, mix the cocoa powder, maple syrup, cashew butter, almond flour, cinnamon, sea salt and milk until a dough forms. If your nut butter wasn't very runny, add a little more milk.",
+   "Roll the dough into 6 large balls and freeze for 30 minutes.",
+   "Melt the chocolate chips in the microwave, stirring every 30 seconds, or in a double boiler. Stirring in 1 tsp coconut oil helps it get smooth.",
+   "Dip each brownie ball in the melted chocolate, then sprinkle with flaky sea salt and sprinkles.",
+   "Freeze another 10 minutes and enjoy. Store them in the freezer."
+  ],
+  "added": "2026-10-17T19:07:47.141Z",
+  "tags": [
+   "Desserts"
+  ]
  }
 ]
