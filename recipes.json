@@ -26134,5 +26134,43 @@
    "Cocktails",
    "Holiday Ideas"
   ]
+ },
+ {
+  "id": "creamy-sausage-farfalle-soup",
+  "title": "Creamy Sausage Farfalle Soup",
+  "description": "A cozy one-pot fall soup: Italian sausage browned with garlic and onion, simmered in seasoned chicken broth with bow-tie pasta, then finished with heavy cream, parmesan and spinach.",
+  "servings": null,
+  "prepTime": null,
+  "cookTime": null,
+  "totalTime": null,
+  "image": "images/creamy-sausage-farfalle-soup.jpg",
+  "source": "https://www.facebook.com/share/r/1DrEzGwMrJ/",
+  "sourceName": "Facebook (Alana Cinadr)",
+  "ingredients": [
+   "Olive oil",
+   "1 pound Italian-style sausage",
+   "1 tbsp minced garlic",
+   "1 yellow onion, diced",
+   "Salt, pepper, garlic powder, Italian seasoning, oregano leaves, parsley and paprika, to taste",
+   "1 tbsp tomato paste",
+   "2 cups chicken broth",
+   "8 ounces farfalle (bow-tie) pasta",
+   "2 cups heavy whipping cream",
+   "3 ounces shredded parmesan cheese",
+   "Spinach (a few handfuls)"
+  ],
+  "steps": [
+   "Drizzle olive oil into a pot and add the Italian sausage.",
+   "Add the minced garlic and onion and brown the meat.",
+   "Stir in all the seasonings (season to taste) and the tomato paste.",
+   "Add 2 cups of chicken broth and bring it to a boil. Once boiling, add the farfalle.",
+   "Stir in the heavy cream, parmesan cheese and spinach.",
+   "Cover with a lid and simmer for 10 minutes, then it's ready."
+  ],
+  "added": "2026-10-20T20:37:19.840Z",
+  "tags": [
+   "Soup",
+   "Dinner"
+  ]
  }
 ]
