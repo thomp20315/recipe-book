@@ -162,12 +162,15 @@ function toast(t){var el=$('toast');el.textContent=t;el.classList.add('show');cl
 var seq=0;function load(){var my=++seq;return SB('cart_items?select=*&order=sort_order.asc,created_at.asc').then(function(x){if(my===seq){items=x;render();}}).catch(function(){});}
 function act(p,okMsg){$('cstat').textContent='Saving\\u2026';return p.then(function(r){return load().then(function(){$('cstat').textContent='';if(okMsg)toast(okMsg);return r});})
 .catch(function(){$('cstat').textContent='Couldn\\u2019t save \\u2014 check your connection and try again.';toast('Couldn\\u2019t save \\u2014 try again');load();});}
+var CGK='rb.cartCollapsed';function cgGet(){try{return JSON.parse(localStorage.getItem(CGK)||'{}')||{}}catch(x){return {}}}
+function cgSet(o){try{localStorage.setItem(CGK,JSON.stringify(o))}catch(x){}}
 function render(){var n=items.filter(function(i){return !i.checked}).length,c=$('cartCnt');c.textContent=n>99?'99+':n;c.hidden=!n;
 var L=$('cartList');if(!items.length){L.innerHTML='<p class="empty">Your cart is empty. Add a recipe\\u2019s ingredients from its page, or add an item above.</p>';return;}
 var groups={},order=[];items.forEach(function(i){var k=i.recipe_id||'';if(!groups[k]){groups[k]=[];order.push(k)}groups[k].push(i);});
 order.sort(function(a,b){return (a===''?1:0)-(b===''?1:0)});
-L.innerHTML=order.map(function(k){var g=groups[k],title=k?(g[0].recipe_title||(REC[k]&&REC[k].t)||k):'Other items';
-return '<div class="grp"><div class="grp-h"><span>'+esc(title)+'</span><button type="button" data-delgrp="'+esc(k)+'">Remove</button></div>'+g.map(function(i){
+var CG=cgGet(),allC=order.every(function(k){return CG[k||'_other']});
+L.innerHTML=(order.length>1?'<div class="grp-all"><button type="button" id="grpAll" data-all="'+(allC?'0':'1')+'">'+(allC?'Expand all':'Collapse all')+'</button></div>':'')+order.map(function(k){var g=groups[k],title=k?(g[0].recipe_title||(REC[k]&&REC[k].t)||k):'Other items',ck=k||'_other',col=!!CG[ck],left=g.filter(function(i){return !i.checked}).length,cnt=left===g.length?g.length+(g.length===1?' item':' items'):left+' of '+g.length+' left';
+return '<div class="grp'+(col?' collapsed':'')+'" data-gk="'+esc(ck)+'"><div class="grp-h"><button type="button" class="grp-t" aria-expanded="'+(!col)+'"><span class="chev" aria-hidden="true"></span><span class="grp-nm">'+esc(title)+'</span><small class="grp-n">'+cnt+'</small></button><button type="button" class="grp-rm" data-delgrp="'+esc(k)+'">Remove</button></div>'+g.map(function(i){
 return '<div class="it'+(i.checked?' done':'')+'" data-id="'+esc(i.id)+'"><input type="checkbox" aria-label="Check off '+esc(i.text)+'"'+(i.checked?' checked':'')+'><span class="t">'+esc(i.text)+'</span><button type="button" class="edit" aria-label="Edit">'+IC.pencil+'</button><button type="button" class="del" aria-label="Delete">'+IC.trash+'</button></div>';}).join('')+'</div>';}).join('');}
 function money(v){return (typeof v==='number')?'$'+v.toFixed(2):esc(v||'');}
 function num(v){return typeof v==='number'?v:null;}
@@ -250,19 +253,20 @@ var priced=st.filter(function(s){return num(s.total)!=null}).sort(function(a,b){
 var top=(Array.isArray(r.top3)&&r.top3.length?r.top3.map(function(id){return byId[id]}).filter(Boolean):priced).slice(0,3);
 var full=priced.filter(function(s){return !(Array.isArray(s.items_missing)&&s.items_missing.length)});var cheapest=(r.cheapest_store&&byId[r.cheapest_store])||full[0]||priced[0]||null;
 var h='<h4>Shopping results<button type="button" class="delres" data-delres="'+esc(String(row.id))+'" aria-label="Delete these results">Delete</button></h4><div class="when">'+esc(new Date(row.created_at).toLocaleString())+(r.zip||row.zip?' &middot; zip '+esc(r.zip||row.zip):'')+'</div>';
-if(cheapest)h+='<div class="best">Cheapest overall: '+esc(cheapest.name)+' &mdash; '+money(cheapest.total)+(num(cheapest.coupon_savings)?' <small>(after '+money(cheapest.coupon_savings)+' in coupons)</small>':'')+'</div>';
 if(!window.rOpen){window._ro={};window.rOpen=function(k,d){return k in _ro?_ro[k]:d};document.addEventListener('toggle',function(e){var t=e.target;if(t.dataset&&t.dataset.k)_ro[t.dataset.k]=t.open},true);}
+if(top.length){h+='<h5 class="rh">Top '+top.length+' store'+(top.length>1?'s':'')+'</h5>';
+h+=top.map(function(s,ix){var ps=picks.filter(function(p){return p.store===s.id||p.store===s.name});
+var miss=Array.isArray(s.items_missing)?s.items_missing:[];
+return '<details data-k="'+esc(s.id)+'" class="store'+(s===cheapest?' cheap':'')+'"'+(rOpen(s.id,ix===0)?' open':'')+'><summary><div class="sh"><span>'+(ix+1)+'. '+esc(s.name)+'</span><span class="tr">'+ring(s.clean_score)+money(s.total)+'</span></div><div class="sa">'+esc(s.address||'')+(s.distance_mi!=null?' &middot; '+esc(s.distance_mi)+' mi':'')+(s.items_found!=null?' &middot; '+esc(s.items_found)+' found':'')+(miss.length?' &middot; '+miss.length+' missing':'')+(num(s.coupon_savings)?' &middot; <b class="sv">'+money(s.coupon_savings)+' coupons</b>':'')+'</div></summary>'+
+ps.map(pickLine).join('')+(miss.length?'<div class="miss">Not found here: '+miss.map(esc).join(', ')+'</div>':'')+(ps.length||num(s.total)!=null?sums(s):'')+cartBtn('store:'+s.id,[{store:s.id,name:s.name,items:cartItems(ps)}])+'</details>';}).join('');}
+var hsplit=h.length;
 var hy=r.hybrid;
 if(hy&&Array.isArray(hy.assignments)&&hy.assignments.length){var hs=(hy.stores||[]).map(function(id){return byId[id]?byId[id].name:id});
 h+='<details data-k="hyb" class="store hyb"'+(rOpen('hyb',false)?' open':'')+'><summary><div class="sh"><span>Best 2-store split</span><span class="tr">'+ring(hy.clean_score)+money(hy.total)+'</span></div><div class="sa">'+esc(hs.join(' + '))+(num(hy.savings_vs_best_single)?' &middot; <b class="sv">saves '+money(hy.savings_vs_best_single)+'</b> '+esc(hy.savings_label||'vs. one store'):'')+'</div></summary>';
 (hy.stores||[]).forEach(function(id){var its=hy.assignments.filter(function(a){return a.store===id});if(!its.length)return;h+='<div class="hgrp"><b>'+esc(byId[id]?byId[id].name:id)+'</b><ul>'+its.map(function(a){return '<li>'+esc(a.item)+'</li>'}).join('')+'</ul></div>';});
 h+=sums(hy)+cartBtn('hyb',(hy.stores||[]).map(function(id){return {store:id,name:byId[id]?byId[id].name:id,items:cartItems(hy.assignments.filter(function(a){return a.store===id}).map(function(a){return picks.filter(function(p){return p.store===id&&p.item===a.item})[0]||null}))}}))+(hy.note?'<p class="notes">'+esc(hy.note)+'</p>':'')+'</details>';}
 h+=custBox(r,byId);
-if(top.length){h+='<h5 class="rh">Top '+top.length+' store'+(top.length>1?'s':'')+'</h5>';
-h+=top.map(function(s,ix){var ps=picks.filter(function(p){return p.store===s.id||p.store===s.name});
-var miss=Array.isArray(s.items_missing)?s.items_missing:[];
-return '<details data-k="'+esc(s.id)+'" class="store'+(s===cheapest?' cheap':'')+'"'+(rOpen(s.id,ix===0)?' open':'')+'><summary><div class="sh"><span>'+(ix+1)+'. '+esc(s.name)+'</span><span class="tr">'+ring(s.clean_score)+money(s.total)+'</span></div><div class="sa">'+esc(s.address||'')+(s.distance_mi!=null?' &middot; '+esc(s.distance_mi)+' mi':'')+(s.items_found!=null?' &middot; '+esc(s.items_found)+' found':'')+(miss.length?' &middot; '+miss.length+' missing':'')+(num(s.coupon_savings)?' &middot; <b class="sv">'+money(s.coupon_savings)+' coupons</b>':'')+'</div></summary>'+
-ps.map(pickLine).join('')+(miss.length?'<div class="miss">Not found here: '+miss.map(esc).join(', ')+'</div>':'')+(ps.length||num(s.total)!=null?sums(s):'')+cartBtn('store:'+s.id,[{store:s.id,name:s.name,items:cartItems(ps)}])+'</details>';}).join('');}
+if(h.length>hsplit)h=h.slice(0,hsplit)+'<h5 class="rh">2-store splits</h5>'+h.slice(hsplit);
 var rest=st.filter(function(s){return top.indexOf(s)<0});
 if(st.length){h+='<h5 class="rh">All stores checked</h5><ul class="all">'+st.map(function(s){return '<li><span>'+esc(s.name)+(s.distance_mi!=null?' <small>'+esc(s.distance_mi)+' mi</small>':'')+'</span><span class="tr">'+ring(s.clean_score)+(num(s.total)!=null?money(s.total):'<small>no prices</small>')+'</span></li>'}).join('')+'</ul>';}
 if(r.notes)h+='<p class="notes">'+esc(r.notes)+'</p>';box.innerHTML=h;box.hidden=false;paintCarts();loadCarts();}
@@ -286,6 +290,8 @@ function upd(id,patch){return SB('cart_items?id=eq.'+id,{method:'PATCH',prefer:'
 $('cartList').addEventListener('change',function(e){if(e.target.type!=='checkbox')return;var id=e.target.closest('.it').dataset.id,v=e.target.checked;
 e.target.closest('.it').classList.toggle('done',v);act(upd(id,{checked:v}));});
 $('cartList').addEventListener('click',function(e){var row=e.target.closest('.it'),g=e.target.closest('[data-delgrp]');
+var tg=e.target.closest('.grp-t');if(tg){var gp=tg.closest('.grp'),gk=gp.dataset.gk,o=cgGet(),c=!gp.classList.contains('collapsed');if(c)o[gk]=1;else delete o[gk];cgSet(o);gp.classList.toggle('collapsed',c);tg.setAttribute('aria-expanded',!c);var ab=$('grpAll');if(ab){var ac=[].every.call(document.querySelectorAll('#cartList .grp'),function(x){return x.classList.contains('collapsed')});ab.dataset.all=ac?'0':'1';ab.textContent=ac?'Expand all':'Collapse all';}return;}
+var ga=e.target.closest('#grpAll');if(ga){var on=ga.dataset.all==='1',o2=cgGet();[].forEach.call(document.querySelectorAll('#cartList .grp'),function(x){if(on)o2[x.dataset.gk]=1;else delete o2[x.dataset.gk];});cgSet(o2);render();return;}
 if(g){var k=g.dataset.delgrp;if(confirm('Remove all items for this recipe?'))act(SB('cart_items?'+(k?'recipe_id=eq.'+encodeURIComponent(k):'recipe_id=is.null'),{method:'DELETE'}),'Removed \\u2713');return;}
 if(!row)return;var id=row.dataset.id;
 if(e.target.closest('.del')){row.style.opacity=.4;act(SB('cart_items?id=eq.'+id,{method:'DELETE'}));return;}

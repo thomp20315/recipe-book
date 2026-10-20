@@ -139,6 +139,14 @@ font:600 16px var(--font);color:var(--on-accent);background:color-mix(in srgb,va
 .grp-h{display:flex;align-items:center;gap:8px;padding:16px 20px 8px}
 .grp-h span{flex:1;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
 .grp-h button{border:0;background:none;color:var(--accent);font:500 14px var(--font);cursor:pointer;padding:4px 0}
+.grp-h .grp-t{flex:1;min-width:0;display:flex;align-items:center;gap:10px;text-align:left;color:var(--ink-3);padding:4px 0;-webkit-tap-highlight-color:transparent}
+.grp-t .grp-nm{flex:0 1 auto;min-width:0;line-height:1.35;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.grp-t .grp-n{flex:none;font:500 12px var(--font);color:var(--ink-3);background:var(--line);border-radius:999px;padding:2px 8px;display:none}
+.grp.collapsed .grp-n{display:inline-block}
+.grp-t .chev{flex:none;width:7px;height:7px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:translateY(-2px) rotate(45deg);transition:transform .25s var(--ease)}
+.grp.collapsed .grp-t .chev{transform:rotate(-45deg)}
+.grp.collapsed .it{display:none}.grp.collapsed .grp-h{padding-bottom:16px}
+.grp-all{display:flex;justify-content:flex-end;margin:-4px 4px 8px}.grp-all button{border:0;background:none;color:var(--accent);font:500 14px var(--font);cursor:pointer;padding:4px 0}
 .it{display:flex;align-items:center;gap:12px;padding:12px 20px;border-top:.5px solid var(--line)}.grp-h+.it{border-top:0}
 .it input[type=checkbox]{-webkit-appearance:none;appearance:none;width:24px;height:24px;flex:none;margin:0;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--line-2);cursor:pointer;display:grid;place-items:center;transition:background-color .25s var(--ease),box-shadow .25s var(--ease)}
 .it input[type=checkbox]::after{content:"";width:6px;height:11px;border:solid var(--on-accent);border-width:0 2px 2px 0;transform:translateY(-1px) rotate(45deg) scale(0);transition:transform .3s var(--ease)}
