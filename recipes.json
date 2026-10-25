@@ -26172,5 +26172,56 @@
    "Soup",
    "Dinner"
   ]
+ },
+ {
+  "id": "sesame-peanut-chicken",
+  "title": "Sesame Peanut Chicken",
+  "description": "Crispy diced chicken thighs tossed in a creamy soy, chili crisp and peanut butter sauce, served over rice with sesame seeds, green onions, cucumber and a squeeze of lime. Ready in about 20-30 minutes.",
+  "servings": "2",
+  "prepTime": null,
+  "cookTime": null,
+  "totalTime": "30 minutes",
+  "image": "images/sesame-peanut-chicken.jpg",
+  "source": "https://www.tiktok.com/@zachs.foods/video/7699911717861461279",
+  "sourceName": "TikTok (@zachs.foods)",
+  "ingredients": [
+   "FOR THE CHICKEN:",
+   "3-4 chicken thighs, diced",
+   "2 tbsp soy sauce (low sodium)",
+   "1 tsp onion powder",
+   "1/2 tsp red pepper flakes",
+   "1/2 tsp black pepper",
+   "1 large garlic clove, grated",
+   "1 tsp baking soda",
+   "1 tbsp cornstarch",
+   "2 tbsp oil, for searing (the creator uses canola)",
+   "FOR THE SAUCE:",
+   "2 tbsp soy sauce (low sodium)",
+   "1 tbsp chili crisp",
+   "2 tsp rice vinegar",
+   "1 tbsp brown sugar",
+   "1 tsp sesame oil",
+   "2 tbsp peanut butter",
+   "1 large garlic clove, grated",
+   "2 tbsp unsalted butter",
+   "FOR SERVING:",
+   "Cooked rice",
+   "Green onions, sliced",
+   "Sesame seeds",
+   "Sliced cucumber",
+   "Lime wedges"
+  ],
+  "steps": [
+   "Dice the chicken thighs and add to a bowl with the soy sauce, black pepper, onion powder, red pepper flakes and grated garlic. Mix until coated, then add the baking soda and cornstarch and mix again until coated.",
+   "In a separate bowl, whisk together the soy sauce, chili crisp, rice vinegar, brown sugar, sesame oil, peanut butter and grated garlic until smooth and creamy.",
+   "Sear the chicken over medium-high heat in 2 tbsp oil for 4-5 minutes, until crispy and cooked through. Set aside.",
+   "In the same pan, melt 2 tbsp butter, then add the sauce. Whisk together, scraping the bottom of the pan.",
+   "Let the sauce come to a light bubble, about 1-2 minutes, then add the cooked chicken and toss until nicely coated.",
+   "Serve immediately over rice, topped with sesame seeds, green onions and sliced cucumber, with a squeeze of lime juice."
+  ],
+  "added": "2026-10-25T01:30:17.915Z",
+  "tags": [
+   "Dinner"
+  ]
  }
 ]
