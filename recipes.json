@@ -26296,5 +26296,34 @@
   "tags": [
    "Desserts"
   ]
+ },
+ {
+  "id": "pumpkin-pie-chia-pudding",
+  "title": "Pumpkin Pie Chia Pudding",
+  "description": "A make-ahead fall breakfast with about 10 grams of fiber: chia seeds, pumpkin puree, pumpkin pie spice, milk and maple syrup set overnight in a jar, then topped with Greek yogurt and a dusting of spice.",
+  "servings": "1",
+  "prepTime": "5 min",
+  "cookTime": null,
+  "totalTime": "2 hours to overnight (chilling)",
+  "image": "images/pumpkin-pie-chia-pudding.jpg",
+  "source": "https://www.instagram.com/reel/De0atqYxPOv/",
+  "sourceName": "Instagram (@feelgoodfoodie)",
+  "ingredients": [
+   "2 tablespoons chia seeds",
+   "1/4 cup plain pumpkin puree",
+   "1/4 teaspoon pumpkin pie spice, plus more for topping",
+   "1/4 cup milk",
+   "1 tablespoon maple syrup",
+   "Greek yogurt, for topping"
+  ],
+  "steps": [
+   "Place the chia seeds, pumpkin puree, pumpkin pie spice, maple syrup and milk in a jar and mix well. Let it settle for 2 to 3 minutes, then mix well again until there's no clumping.",
+   "Cover the jar and refrigerate overnight, or for at least 2 hours.",
+   "When you're ready to eat, top with Greek yogurt and a sprinkle of pumpkin pie spice, and enjoy cold."
+  ],
+  "added": "2026-10-29T02:36:05.980Z",
+  "tags": [
+   "Breakfast"
+  ]
  }
 ]
