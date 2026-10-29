@@ -26402,5 +26402,40 @@
   "tags": [
    "Desserts"
   ]
+ },
+ {
+  "id": "chocolate-chip-cookie-bars-in-a-pan",
+  "title": "Famous Chocolate Chip Cookies (In a Pan)",
+  "description": "Classic chocolate chip cookie dough baked in one 13x9 pan and cut into bars. One bowl, no dough chilling and no scooping individual cookies.",
+  "servings": "One 13x9 pan",
+  "prepTime": "10 min",
+  "cookTime": "20-25 min",
+  "totalTime": "35 min",
+  "image": "images/chocolate-chip-cookie-bars-in-a-pan.jpg",
+  "source": "https://www.instagram.com/reel/De7O14qgIpU/",
+  "sourceName": "Instagram (@what.erincooks)",
+  "ingredients": [
+   "1 cup (2 sticks) unsalted butter, room temperature",
+   "1 cup firmly packed light brown sugar",
+   "1/2 cup sugar",
+   "2 tsp vanilla",
+   "2 eggs",
+   "3 cups all-purpose flour",
+   "4 tsp cornstarch",
+   "1 tsp baking soda",
+   "1 tsp salt",
+   "2 cups chocolate chips"
+  ],
+  "steps": [
+   "Preheat the oven to 375°F. Line a 13x9-inch pan with parchment paper.",
+   "With a handheld mixer or a stand mixer fitted with the paddle, cream the butter, brown sugar and sugar in a large bowl. Add the vanilla and mix, then add the eggs and mix until combined.",
+   "Add the flour, cornstarch, baking soda and salt and mix until a dough forms. Add the chocolate chips and mix or stir them in.",
+   "Dump the cookie dough into the prepared pan and spread it out.",
+   "Bake 20-25 minutes, until the top and edges are golden brown. Cool, then cut into bars."
+  ],
+  "added": "2026-10-29T16:58:10.665Z",
+  "tags": [
+   "Desserts"
+  ]
  }
 ]
