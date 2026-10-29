@@ -26325,5 +26325,82 @@
   "tags": [
    "Breakfast"
   ]
+ },
+ {
+  "id": "slow-cooker-saucy-miso-beef-bowls",
+  "title": "Slow Cooker Saucy Miso Beef Bowls",
+  "description": "Ten minutes of prep for a slow cooker full of tender, saucy shredded chuck roast in a miso, soy, ginger and garlic sauce, served over rice with cucumber, green onion and sesame seeds.",
+  "servings": "4",
+  "prepTime": "10 min",
+  "cookTime": "7-8 hours (low) or 4-5 hours (high)",
+  "totalTime": "About 8 hours",
+  "image": "images/slow-cooker-saucy-miso-beef-bowls.jpg",
+  "source": "https://broccyourbody.com/slow-cooker-saucy-miso-beef-bowls/",
+  "sourceName": "Brocc Your Body (@broccyourbody TikTok)",
+  "ingredients": [
+   "2 lbs chuck roast, cut into large chunks",
+   "1/2 cup beef broth",
+   "1/4 cup low-sodium soy sauce (or tamari)",
+   "2 tablespoons white miso paste",
+   "1 tablespoon rice wine vinegar",
+   "1 tablespoon toasted sesame oil",
+   "1 tablespoon brown sugar",
+   "3 cloves garlic, minced or grated",
+   "1 tablespoon fresh ginger, grated",
+   "Steamed white rice, to serve",
+   "Thinly sliced green onion and cucumbers, to serve",
+   "Sesame seeds, to serve"
+  ],
+  "steps": [
+   "In a small bowl, combine the beef broth, soy sauce, miso paste, rice wine vinegar, sesame oil, brown sugar, garlic and ginger.",
+   "Add the chuck roast to the slow cooker and pour the sauce on top.",
+   "Cook on low for 7-8 hours or on high for 4-5 hours, then shred the beef with two forks right in the sauce.",
+   "Serve over rice with sliced cucumber, green onion and sesame seeds.",
+   "Oven method: Preheat the oven to 325°F. Sear the beef in 1 tablespoon oil in a Dutch oven over medium-high heat, 2-3 minutes per side. Pour the sauce over with an extra 1/2 cup beef broth, cover and bake 3 to 3 1/2 hours until fork-tender. Shred into the sauce and simmer uncovered 5-10 minutes if you want it thicker."
+  ],
+  "added": "2026-10-29T12:14:31.000Z",
+  "tags": [
+   "Dinner",
+   "Crockpot Meals"
+  ]
+ },
+ {
+  "id": "chocolate-peanut-butter-bars",
+  "title": "Chocolate Peanut Butter Bars",
+  "description": "No-bake bars with a thick, crunchy peanut butter layer made with cinnamon graham crackers and pecans, topped with salty dark chocolate. Like a better peanut butter cup.",
+  "servings": "One 9x9 pan",
+  "prepTime": "20 min",
+  "cookTime": null,
+  "totalTime": "About 2 hours 20 min (with chilling)",
+  "image": "images/chocolate-peanut-butter-bars.jpg",
+  "source": "https://www.tiktok.com/@elizabethwu_/video/7581890720630426894",
+  "sourceName": "TikTok (@elizabethwu_)",
+  "ingredients": [
+   "Peanut butter filling:",
+   "1 cup salted butter, melted (226 g)",
+   "1 1/4 cups creamy peanut butter (330 g)",
+   "1 3/4 cups powdered sugar (210 g)",
+   "2 cups crushed cinnamon graham crackers (240 g)",
+   "1 tsp vanilla bean paste",
+   "1/4 tsp flaky salt",
+   "1/2 cup chopped pecans",
+   "Chocolate topping:",
+   "1 1/2 cups dark chocolate (270 g)",
+   "1/4 cup creamy peanut butter (66 g)",
+   "1 tsp vanilla bean paste",
+   "1/4 tsp flaky salt, plus more for sprinkling"
+  ],
+  "steps": [
+   "For the filling, beat the melted butter, peanut butter and powdered sugar together with a hand mixer.",
+   "Fold in the cinnamon graham cracker crumbs, chopped pecans, vanilla and flaky salt.",
+   "Press the filling into a lined 9x9-inch pan and refrigerate while you make the topping.",
+   "Melt all the chocolate topping ingredients together in the microwave in 30-second bursts, stirring between each so it doesn't burn.",
+   "Pour the chocolate over the chilled filling and sprinkle with flaky salt.",
+   "Refrigerate at least 2 hours before cutting into bars."
+  ],
+  "added": "2026-10-29T12:14:32.000Z",
+  "tags": [
+   "Desserts"
+  ]
  }
 ]
