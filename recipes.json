@@ -26519,5 +26519,39 @@
    "Dinner",
    "Crockpot Meals"
   ]
+ },
+ {
+  "id": "panko-crusted-salmon",
+  "title": "Ina Garten's Panko Crusted Salmon",
+  "description": "Salmon fillets brushed with Dijon and pressed with a thick crust of panko, parsley and lemon zest, seared skin-side down in a hot cast-iron skillet, then finished in the oven until golden. Ready in about 25 minutes.",
+  "servings": "2",
+  "prepTime": "10 min",
+  "cookTime": "15 min",
+  "totalTime": "25 min",
+  "image": "images/panko-crusted-salmon.jpg",
+  "source": "https://www.tiktok.com/@maxiskitchen/video/7210101766745017643",
+  "sourceName": "TikTok (@maxiskitchen)",
+  "ingredients": [
+   "1/3 cup panko breadcrumbs",
+   "1 tbsp minced fresh parsley",
+   "1/2 tsp lemon zest",
+   "Salt and pepper",
+   "1 tbsp olive oil",
+   "2 salmon fillets (6-8 oz each)",
+   "1 tbsp Dijon mustard",
+   "1 tbsp avocado or vegetable oil",
+   "Lemon wedges, for serving"
+  ],
+  "steps": [
+   "Preheat the oven to 425°F.",
+   "In a small bowl, mix the panko, parsley, lemon zest, 1/4 tsp salt and 1/4 tsp pepper. Drizzle with the olive oil and stir until the crumbs are evenly coated. Set aside.",
+   "Place the salmon fillets skin side down on a board. Generously brush the tops with mustard, then sprinkle generously with salt and pepper. Press the panko mixture thickly on top of the mustard on each fillet; the mustard helps it stick.",
+   "Heat the avocado oil over medium-high heat in a 12-inch cast-iron skillet or large heavy ovenproof pan. When the oil is very hot, add the salmon skin side down and sear 3-4 minutes, without turning, to brown the skin.",
+   "Transfer the pan to the hot oven for 5-7 minutes, until the salmon is almost cooked and the panko is browned. Remove, cover with foil and rest 5-10 minutes. Serve hot or at room temperature with lemon wedges."
+  ],
+  "added": "2026-11-11T13:09:36.000Z",
+  "tags": [
+   "Dinner"
+  ]
  }
 ]
