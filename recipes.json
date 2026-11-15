@@ -26553,5 +26553,45 @@
   "tags": [
    "Dinner"
   ]
+ },
+ {
+  "id": "creamy-spicy-peanut-noodles",
+  "title": "10-Minute Creamy Spicy Peanut Noodles",
+  "description": "Noodles tossed in a blender peanut sauce with rice vinegar, soy sauce, toasted sesame oil, chili crunch, fresh ginger and garlic, then topped with crushed peanuts and green onions. Eat right away or chill for cold peanut noodles.",
+  "servings": null,
+  "prepTime": null,
+  "cookTime": null,
+  "totalTime": "10 min",
+  "image": "images/creamy-spicy-peanut-noodles.jpg",
+  "source": "https://www.tiktok.com/@snackbenimble/video/7707848182713109773",
+  "sourceName": "TikTok (@snackbenimble)",
+  "ingredients": [
+   "10-12 oz noodles of choice",
+   "2/3 cup water",
+   "1/4 cup rice vinegar",
+   "1/3 cup peanut butter",
+   "2 tbsp sesame seeds",
+   "1 tbsp toasted sesame oil",
+   "1 tbsp chili crunch",
+   "1-inch cube fresh ginger",
+   "2-3 cloves garlic",
+   "1/4 cup soy sauce",
+   "1-2 tbsp brown sugar",
+   "Crushed peanuts, for garnish",
+   "Green onions, for garnish",
+   "Optional: cilantro, lime"
+  ],
+  "steps": [
+   "Cook the noodles according to the package instructions.",
+   "For the sauce, add the water, rice vinegar, peanut butter, sesame seeds, toasted sesame oil, chili crunch, ginger, garlic, soy sauce and brown sugar to a blender and blend until smooth.",
+   "Pour the sauce over the noodles and toss.",
+   "Eat right away, or refrigerate for 30 minutes to a few hours and serve chilled.",
+   "Garnish with crushed peanuts and green onions. Cilantro and lime are great too."
+  ],
+  "added": "2026-11-15T13:13:13.000Z",
+  "addedBy": "Mom",
+  "tags": [
+   "Dinner"
+  ]
  }
 ]
