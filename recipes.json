@@ -26633,5 +26633,40 @@
   "tags": [
    "Breakfast"
   ]
+ },
+ {
+  "id": "pear-thyme-gin-spritz",
+  "title": "Pear Thyme Gin Spritz",
+  "description": "A light, refreshing Thanksgiving cocktail: gin, pear juice, fresh lemon and homemade thyme simple syrup shaken with ice, poured over ice and topped with prosecco. Garnished with a thyme sprig and a thin pear slice. Makes 2.",
+  "servings": "2 cocktails",
+  "prepTime": null,
+  "cookTime": null,
+  "totalTime": null,
+  "image": "images/pear-thyme-gin-spritz.jpg",
+  "source": "https://www.tiktok.com/@kalenainthekitchen/video/7708476297281916174",
+  "sourceName": "TikTok (@kalenainthekitchen)",
+  "ingredients": [
+   "3 oz gin",
+   "4 oz pear juice",
+   "1 oz fresh lemon juice",
+   "1 oz thyme simple syrup (below)",
+   "4 oz prosecco, for topping",
+   "Ice",
+   "Fresh thyme sprigs and pear slices, for garnish",
+   "Thyme simple syrup: equal parts sugar and water, plus a few sprigs of fresh thyme"
+  ],
+  "steps": [
+   "Make the thyme simple syrup: simmer equal parts sugar and water with a few sprigs of fresh thyme until the sugar dissolves. Let steep for 10-15 minutes, then strain and cool.",
+   "Add the gin, pear juice, lemon juice and thyme simple syrup to a cocktail shaker with ice.",
+   "Shake until chilled, then strain into two ice-filled glasses.",
+   "Top each glass with 2 oz prosecco.",
+   "Garnish with a fresh thyme sprig and a thin pear slice. Cheers!",
+   "Note: the creator doesn't give an amount of sugar/water for the thyme syrup (just equal parts), only that you need 1 oz for 2 cocktails."
+  ],
+  "added": "2026-11-15T21:38:50.000Z",
+  "addedBy": "Mom",
+  "tags": [
+   "Cocktails"
+  ]
  }
 ]
