@@ -26593,5 +26593,45 @@
   "tags": [
    "Dinner"
   ]
+ },
+ {
+  "id": "berry-crumble-baked-oats",
+  "title": "Berry Crumble Baked Oats",
+  "description": "Jammy raspberries and blueberries topped with a protein baked-oat layer (oats, vanilla protein powder, egg, milk, peanut butter, maple and cinnamon) that tastes like crumble. Meal-prep breakfast: makes 4 portions, about 350 calories and 18g protein each (per the creator), served with Greek yogurt or skyr.",
+  "servings": "4",
+  "prepTime": null,
+  "cookTime": "30-40 min",
+  "totalTime": null,
+  "image": "images/berry-crumble-baked-oats.jpg",
+  "source": "https://www.tiktok.com/@byshannonrebecca/video/7692746626602896672",
+  "sourceName": "TikTok (@byshannonrebecca)",
+  "ingredients": [
+   "160g frozen raspberries",
+   "160g frozen blueberries",
+   "160g rolled oats",
+   "46g vanilla protein powder",
+   "1 egg",
+   "200ml semi-skimmed milk",
+   "30g peanut butter",
+   "Maple syrup (can substitute with honey): 5g in the oat mixture, plus a small drizzle over the berries",
+   "Ground sweet cinnamon (1 tbsp in the oat mixture)",
+   "Optional: a sprinkle of granola or muesli for extra crunch",
+   "Greek yogurt or skyr, to serve"
+  ],
+  "steps": [
+   "Divide the frozen berries between 4 oven-safe containers. Warm the berries in the oven at 180°C / 160°C fan / Gas 4 (about 350°F) for 10-15 minutes, until the berries have softened and become juicy.",
+   "Meanwhile, mix the oats, protein powder, egg, milk, peanut butter, 5g maple syrup and 1 tbsp cinnamon in a bowl.",
+   "Remove the berries from the oven, add a small drizzle of maple syrup to each and press down with a fork to make them more jam-like.",
+   "Spoon the oat mixture on top of the berries in an even layer. Optionally add a tiny sprinkle of muesli or granola for extra crunch.",
+   "Return to the oven for 20-25 minutes, until golden on top and cooked through.",
+   "Leave to cool before serving with Greek yogurt or skyr.",
+   "Keeps in the fridge for 4 days. Microwave for 60-90 seconds to reheat, and add the yogurt fresh each time.",
+   "Note: the creator doesn't give amounts for the maple drizzle over the berries, the granola/muesli, or the yogurt."
+  ],
+  "added": "2026-11-15T18:58:54.000Z",
+  "addedBy": "Mom",
+  "tags": [
+   "Breakfast"
+  ]
  }
 ]
