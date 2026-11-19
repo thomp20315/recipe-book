@@ -26713,5 +26713,43 @@
    "Dinner",
    "Crockpot Meals"
   ]
+ },
+ {
+  "id": "sugar-cookie-overnight-oats",
+  "title": "Sugar Cookie Overnight Oats",
+  "description": "Festive overnight oats that taste like a sugar cookie in oat form: quick oats, chia, vanilla protein powder, vanilla Greek yogurt and cashew butter with a touch of maple, vanilla and almond extract, finished with white chocolate chips and sprinkles. Quantities are per jar; she preps a few jars at once for the week.",
+  "servings": "1",
+  "prepTime": null,
+  "cookTime": null,
+  "totalTime": null,
+  "image": "images/sugar-cookie-overnight-oats.jpg",
+  "source": "https://www.tiktok.com/@morganpetersonn/video/7709292728235986189",
+  "sourceName": "TikTok (@morganpetersonn)",
+  "ingredients": [
+   "1/2 cup quick oats (she likes Bob's Red Mill)",
+   "1 tbsp chia seeds",
+   "1 scoop vanilla protein powder (she uses 1Up Nutrition)",
+   "2 heaping tbsp vanilla Greek yogurt (she likes Siggi's dairy-free)",
+   "1/2-1 tbsp cashew butter (almond butter works too)",
+   "1/3-1/2 cup almond milk or milk of choice (depending on how thick you like your oats)",
+   "1 tsp maple syrup",
+   "Splash of vanilla extract",
+   "1/8 tsp almond extract (a little goes a long way)",
+   "Pinch of sea salt",
+   "White chocolate chips (optional but highly recommended)",
+   "Sprinkles (optional but highly recommended)"
+  ],
+  "steps": [
+   "Add the quick oats, chia seeds, vanilla protein powder, vanilla Greek yogurt, cashew butter and a pinch of sea salt to a jar.",
+   "Add a small spoonful of white chocolate chips, if using.",
+   "Pour in 1/3-1/2 cup milk (closer to 1/3 cup for thicker oats), then add the maple syrup, a splash of vanilla extract and 1/8 tsp almond extract.",
+   "Top with sprinkles, then mix everything together well.",
+   "Cover and refrigerate overnight. Enjoy cold for breakfast (makes a great make-ahead for the next few mornings)."
+  ],
+  "added": "2026-11-19T18:12:57.000Z",
+  "addedBy": "Mom",
+  "tags": [
+   "Breakfast"
+  ]
  }
 ]
