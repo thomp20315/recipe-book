@@ -26751,5 +26751,37 @@
   "tags": [
    "Breakfast"
   ]
+ },
+ {
+  "id": "2-ingredient-banana-donuts",
+  "title": "2 Ingredient Banana Donuts",
+  "description": "Mashed banana and self-rising flour rolled into balls and air fried, then tossed in a little butter and cinnamon sugar. Tim says it tastes like cinnamon banana bread, only easier. His batch made 5. The caption only names the dish, so this comes from his narration in the video. Amounts for the butter and cinnamon sugar weren't given.",
+  "servings": "5 donuts",
+  "prepTime": null,
+  "cookTime": "10 min",
+  "totalTime": null,
+  "image": "images/2-ingredient-banana-donuts.jpg",
+  "imageUrl": null,
+  "source": "https://www.instagram.com/reel/DfqYatQPWqQ/?jplx=MWE3cHRpZHY1YjUx",
+  "sourceName": "Instagram (@timthetankofficial)",
+  "ingredients": [
+   "1 banana",
+   "3/4 cup self-rising flour",
+   "Butter (a little, for coating)",
+   "Cinnamon sugar (for coating)"
+  ],
+  "steps": [
+   "Mash the banana in a bowl with a fork.",
+   "Add 3/4 cup self-rising flour and whisk it together.",
+   "Knead the dough with your hand, then roll it into balls (he got 5).",
+   "Air fry at 350°F for 10 minutes.",
+   "Move the donuts to a separate bowl and toss them with a little butter and some cinnamon sugar."
+  ],
+  "added": "2026-11-20T17:15:02.000Z",
+  "addedBy": "Mom",
+  "tags": [
+   "Kids",
+   "Breakfast"
+  ]
  }
 ]
